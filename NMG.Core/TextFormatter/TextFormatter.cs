@@ -26,11 +26,11 @@ namespace NMG.Core.TextFormatter
             // Cannot have class or property with not allowed chars
             result = result
                 .Replace("%", "Porcentaje") //Means Percentage in spanish
-                .Replace("с", "a")
-                .Replace("щ", "e")
-                .Replace("э", "i")
-                .Replace("є", "o")
-                .Replace("·", "u");
+                .Replace("ив", "a")
+                .Replace("иж", "e")
+                .Replace("ик", "i")
+                .Replace("ио", "o")
+                .Replace("и▓", "u");
 
             // Split by capitals to preserve pascal/camelcasing in original text value
             // Preserves TLAs. See http://stackoverflow.com/a/1098039
