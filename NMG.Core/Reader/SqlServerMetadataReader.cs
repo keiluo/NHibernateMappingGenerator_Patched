@@ -35,6 +35,7 @@ namespace NMG.Core.Reader
        FROM information_schema.table_constraints x 
        INNER JOIN information_schema.constraint_column_usage ccux ON c.table_name = ccux.table_name and c.column_name = ccux.column_name and c.table_schema = ccux.table_schema
        WHERE x.constraint_type = 'UNIQUE' and x.table_schema = ccux.table_schema and x.constraint_name = ccux.constraint_name) IsUnique
+ ,t.column_description
 from information_schema.columns c
 	left outer join (
 		information_schema.constraint_column_usage ccu
@@ -48,6 +49,14 @@ from information_schema.columns c
 		and c.table_name = ccu.table_name
 		and c.column_name = ccu.column_name
 	)
+	left join (SELECT s.name as schema_name, A.name AS table_name,B.name AS column_name,C.value AS column_description 
+FROM sys.schemas s
+inner join  sys.tables A  on s.schema_id=A.schema_id
+INNER JOIN sys.columns B 
+ON B.object_id = A.object_id LEFT JOIN sys.extended_properties C 
+ON C.major_id = B.object_id AND C.minor_id = B.column_id ) t 
+on c.TABLE_SCHEMA=t.schema_name and c.TABLE_NAME=t.table_name and c.COLUMN_NAME=t.column_name
+
 						where c.table_name = '{0}'
 							  and c.table_schema ='{1}'
 						order by c.table_name, c.ordinal_position",
@@ -66,7 +75,7 @@ from information_schema.columns c
 							    var isUnique = Convert.ToBoolean(sqlDataReader["IsUnique"]);
 								bool isPrimaryKey = (!sqlDataReader.IsDBNull(3) && sqlDataReader.GetString(3).Equals(SqlServerConstraintType.PrimaryKey.ToString(), StringComparison.CurrentCultureIgnoreCase));
 								bool isForeignKey = (!sqlDataReader.IsDBNull(3) && sqlDataReader.GetString(3).Equals(SqlServerConstraintType.ForeignKey.ToString(), StringComparison.CurrentCultureIgnoreCase));
-
+                                string description = sqlDataReader["column_description"].ToString();
 								var m = new DataTypeMapper();
 
 								columns.Add(new Column
@@ -82,7 +91,8 @@ from information_schema.columns c
 													DataLength = characterMaxLenth,
                                                     DataScale = numericScale,
                                                     DataPrecision = numericPrecision,
-													ConstraintName = constraintName
+													ConstraintName = constraintName,
+                                                    Description = description
 												});
 
 								table.Columns = columns;
@@ -144,11 +154,18 @@ from information_schema.columns c
 			try {
 				using (conn) {
 					var tableCommand = conn.CreateCommand();
-					tableCommand.CommandText = String.Format("select table_name from information_schema.tables where table_type in ('BASE TABLE','VIEW') AND TABLE_SCHEMA = '{0}'", owner);
+                    tableCommand.CommandText = String.Format(@"select t.table_name,k.table_description from information_schema.tables t
+left join (SELECT top 1 s.name as schema_name, A.name AS table_name,C.value AS table_description 
+FROM sys.schemas s
+inner join  sys.tables A  on s.schema_id=A.schema_id
+LEFT JOIN sys.extended_properties C ON C.major_id = A.object_id
+WHERE c.minor_id=0) k on t.TABLE_NAME=k.table_name and t.TABLE_SCHEMA=k.schema_name
+where table_type in ('BASE TABLE','VIEW') AND TABLE_SCHEMA = '{0}'", owner);
 					var sqlDataReader = tableCommand.ExecuteReader(CommandBehavior.CloseConnection);
 					while (sqlDataReader.Read()) {
 						var tableName = sqlDataReader.GetString(0);
-						tables.Add(new Table { Name = tableName });
+                         string description = sqlDataReader["table_description"].ToString();
+                        tables.Add(new Table { Name = tableName, Description = description });
 					}
 				}
 				tables.Sort((x, y) => String.CompareOrdinal(x.Name, y.Name));

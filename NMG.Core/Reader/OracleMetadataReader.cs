@@ -54,11 +54,12 @@ namespace NMG.Core.Reader
                 using (OracleCommand tableCommand = conn.CreateCommand())
                 {
                     tableCommand.CommandText =
-                        @"select column_name, data_type, nullable, sum(constraint_type) constraint_type, data_length, data_precision, data_scale
+                        @"
+select column_name, data_type, nullable, sum(constraint_type) constraint_type, data_length, data_precision, data_scale,comments as column_description
 from (
 SELECT tc.column_name AS column_name, tc.data_type AS data_type, tc.nullable AS NULLABLE, 
                                     decode(c.constraint_type, 'P', 1, 'R', 2, 'U', 4, 'C', 8, 16) AS constraint_type, 
-                                    data_length, data_precision, data_scale, column_id
+                                    data_length, data_precision, data_scale, column_id,cm.comments
 from all_tab_columns tc
     left outer join (
             all_cons_columns cc
@@ -71,9 +72,10 @@ from all_tab_columns tc
             and tc.table_name = cc.table_name
             and tc.column_name = cc.column_name
         )
-    where tc.table_name = :table_name and tc.owner = :owner    
+        left join user_col_comments cm on tc.TABLE_NAME=cm.table_name and tc.COLUMN_NAME=cm.column_name
+    where tc.table_name =:table_name and tc.owner = :owner    
 order by tc.table_name, cc.position nulls last, tc.column_id)
-group by column_name, data_type, nullable, data_length, data_precision, data_scale, column_id
+group by column_name, data_type, nullable, data_length, data_precision, data_scale, column_id,comments
 order by column_id";
 
                     tableCommand.Parameters.Add("table_name", table.Name);
@@ -87,8 +89,9 @@ order by column_id";
                             int? dataLength = oracleDataReader.IsDBNull(4) ? (int?)null : Convert.ToInt32(oracleDataReader.GetOracleNumber(4).Value);
                             int? dataPrecision = oracleDataReader.IsDBNull(5) ? (int?)null : Convert.ToInt32(oracleDataReader.GetOracleNumber(5).Value);
                             int? dataScale = oracleDataReader.IsDBNull(6) ? (int?)null : Convert.ToInt32(oracleDataReader.GetOracleNumber(6).Value);
-
-                            columns.Add(new Column {
+                            string description = oracleDataReader["column_description"].ToString();
+                            columns.Add(new Column
+                            {
                                 Name = oracleDataReader.GetOracleString(0).Value,
                                 DataType = oracleDataReader.GetOracleString(1).Value,
                                 IsNullable = string.Equals(oracleDataReader.GetOracleString(2).Value, "Y", StringComparison.OrdinalIgnoreCase),
@@ -98,7 +101,8 @@ order by column_id";
                                 MappedDataType = m.MapFromDBType(ServerType.Oracle, oracleDataReader.GetOracleString(1).Value, dataLength, dataPrecision, dataScale).ToString(),
                                 DataLength = dataLength,
                                 DataPrecision = dataPrecision,
-                                DataScale = dataScale
+                                DataScale = dataScale,
+                                Description = description
                             });
                         }
                         table.Owner = owner;
@@ -131,14 +135,20 @@ order by column_id";
             {
                 using (OracleCommand tableCommand = conn.CreateCommand())
                 {
-                    tableCommand.CommandText = "select table_name from all_tables where owner = :table_name order by table_name";
+                    tableCommand.CommandText = @"
+select a.TABLE_NAME,b.comments as table_description
+from all_tables a 
+left join user_tab_comments b on a.TABLE_NAME=b.table_name
+ where a.owner =:table_name
+order by a.table_name";
                     tableCommand.Parameters.Add(new OracleParameter("table_name", owner));
                     using (OracleDataReader oracleDataReader = tableCommand.ExecuteReader(CommandBehavior.CloseConnection))
                     {
                         while (oracleDataReader.Read())
                         {
                             string tableName = oracleDataReader.GetString(0);
-                            tables.Add(new Table { Name = tableName });
+                            string description = oracleDataReader["table_description"].ToString();
+                            tables.Add(new Table { Name = tableName, Description = description });
                         }
                     }
                 }
@@ -200,7 +210,8 @@ order by column_id";
             if (primaryKeys.Count() == 1)
             {
                 var c = primaryKeys.First();
-                var key = new PrimaryKey {
+                var key = new PrimaryKey
+                {
                     Type = PrimaryKeyType.PrimaryKey,
                     Columns = { c }
                 };
@@ -210,7 +221,8 @@ order by column_id";
             if (primaryKeys.Count() > 1)
             {
                 // Composite key
-                var key = new PrimaryKey {
+                var key = new PrimaryKey
+                {
                     Type = PrimaryKeyType.CompositeKey,
                     Columns = primaryKeys
                 };
@@ -226,12 +238,13 @@ order by column_id";
             var foreignKeys = (from c in table.Columns
                                where c.IsForeignKey
                                group c by new { c.ConstraintName, c.ForeignKeyTableName } into g
-                               select new ForeignKey {
-                Name = g.Key.ConstraintName,
-                References = g.Key.ForeignKeyTableName,
-                Columns = g.ToList(),
-                UniquePropertyName = g.Key.ForeignKeyTableName
-            }).ToList();
+                               select new ForeignKey
+                               {
+                                   Name = g.Key.ConstraintName,
+                                   References = g.Key.ForeignKeyTableName,
+                                   Columns = g.ToList(),
+                                   UniquePropertyName = g.Key.ForeignKeyTableName
+                               }).ToList();
 
             Table.SetUniqueNamesForForeignKeyProperties(foreignKeys);
 
@@ -261,7 +274,8 @@ WHERE C.TABLE_NAME = :TABLE_NAME
 
                     while (reader.Read())
                     {
-                        hasManyRelationships.Add(new HasMany {
+                        hasManyRelationships.Add(new HasMany
+                        {
                             Reference = reader.GetString(0),
                             ReferenceColumn = reader.GetString(1)
                         });
@@ -279,7 +293,7 @@ WHERE C.TABLE_NAME = :TABLE_NAME
                 conn.Open();
                 using (OracleCommand tableCommand = conn.CreateCommand())
                 {
-                    tableCommand.CommandText = 
+                    tableCommand.CommandText =
                     @"SELECT  ucc2.table_name, ucc2.column_name
                       FROM all_constraints uc, all_cons_columns ucc1, all_cons_columns ucc2
                      WHERE uc.constraint_name = ucc1.constraint_name
@@ -287,7 +301,7 @@ WHERE C.TABLE_NAME = :TABLE_NAME
                        AND uc.constraint_type = 'R'
                        AND ucc1.table_name = :table_name
                       and ucc1.column_name = :column_name";
-                 
+
                     tableCommand.Parameters.Add("table_name", selectedTableName);
                     tableCommand.Parameters.Add("column_name", columnName);
                     using (var reader = tableCommand.ExecuteReader())
@@ -295,7 +309,7 @@ WHERE C.TABLE_NAME = :TABLE_NAME
                         if (reader.Read())
                         {
                             return new Tuple<string, string>(reader.GetOracleString(0).Value, reader.GetOracleString(1).Value);
-                        } 
+                        }
                         else
                             return null;
                     }

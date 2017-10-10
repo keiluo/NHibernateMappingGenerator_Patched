@@ -25,7 +25,8 @@ namespace NMG.Core.Domain
     	public IList<ForeignKey> ForeignKeys { get; set; }
         public IList<Column> Columns { get; set; }
         public IList<HasMany> HasManyRelationships { get; set; }
-
+        public string Description { get; set; }
+        public string Name_Description { get { return Name.PadRight(30,' ')+(string.IsNullOrEmpty(Description) ? "" : Description); } }
     	public override string ToString() { return Name; }
 
 		/// <summary>
@@ -99,6 +100,7 @@ namespace NMG.Core.Domain
         public string ForeignKeyTableName { get; set; }
         public string ForeignKeyColumnName { get; set; }
 
+        public string Description { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

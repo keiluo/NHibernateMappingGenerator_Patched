@@ -517,8 +517,7 @@ namespace NHibernateMappingGenerator
                 tablesListBox.Enabled = false;
                 TableFilterTextBox.Enabled = false;
                 tablesListBox.DataSource = _tables;
-                tablesListBox.DisplayMember = "Name";
-
+                tablesListBox.DisplayMember = "Name_Description";
                 if (_tables != null && _tables.Any())
                 {
                     tablesListBox.Enabled = true;
