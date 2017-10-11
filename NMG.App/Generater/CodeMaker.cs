@@ -43,7 +43,7 @@ namespace {0}
  , c.IsIdentity ? "[AutoIncrement]" : ""
  , c.Name
  , c.Description
- , c.MappedDataType + (c.IsNullable && mySetting.IsIgnoreNull ? "?" : "")
+ , c.MappedDataType + (c.IsNullable && !mySetting.IsIgnoreNull ? "?" : "")
  , c.PropertyName);
             }
 
