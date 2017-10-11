@@ -37,14 +37,13 @@ namespace NHibernateMappingGenerator
             this.connectBtn = new System.Windows.Forms.Button();
             this.sequencesComboBox = new System.Windows.Forms.ComboBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.folderTextBox = new System.Windows.Forms.TextBox();
+            this.DomainFolderTextBox = new System.Windows.Forms.TextBox();
             this.generateButton = new System.Windows.Forms.Button();
             this.folderSelectButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.nameSpaceTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.assemblyNameTextBox = new System.Windows.Forms.TextBox();
+            this.DomainNmespaceTextBox = new System.Windows.Forms.TextBox();
+            this.ReposityNamespaceTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.generateAllBtn = new System.Windows.Forms.Button();
             this.mainTabControl = new System.Windows.Forms.TabControl();
@@ -57,25 +56,31 @@ namespace NHibernateMappingGenerator
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dbTableDetailsGridView = new System.Windows.Forms.DataGridView();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.mapCodeFastColoredTextBox = new FastColoredTextBoxNS.FastColoredTextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.domainCodeFastColoredTextBox = new FastColoredTextBoxNS.FastColoredTextBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.fastColoredTextBox1 = new FastColoredTextBoxNS.FastColoredTextBox();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.fastColoredTextBox2 = new FastColoredTextBoxNS.FastColoredTextBox();
             this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.fastColoredTextBox3 = new FastColoredTextBoxNS.FastColoredTextBox();
+            this.tabPage9 = new System.Windows.Forms.TabPage();
+            this.fastColoredTextBox4 = new FastColoredTextBoxNS.FastColoredTextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.entityNameTextBox = new System.Windows.Forms.TextBox();
-            this.domainFolderTextBox = new System.Windows.Forms.TextBox();
+            this.ReposityFolderTextBox = new System.Windows.Forms.TextBox();
+            this.IReposityFolderTextBox = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.domainFolderSelectButton = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.namespaceMapTextBox = new System.Windows.Forms.TextBox();
+            this.IReposityNamespaceTextBox = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.connectionNameComboBox = new System.Windows.Forms.ComboBox();
             this.pOracleOnlyOptions = new System.Windows.Forms.Panel();
@@ -142,6 +147,8 @@ namespace NHibernateMappingGenerator
             this.cSharpType = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.columnDataType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button2 = new System.Windows.Forms.Button();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.mainTabControl.SuspendLayout();
             this.basicSettingsTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -152,10 +159,16 @@ namespace NHibernateMappingGenerator
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dbTableDetailsGridView)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mapCodeFastColoredTextBox)).BeginInit();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.domainCodeFastColoredTextBox)).BeginInit();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox1)).BeginInit();
+            this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox2)).BeginInit();
+            this.tabPage8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox3)).BeginInit();
+            this.tabPage9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox4)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.pOracleOnlyOptions.SuspendLayout();
@@ -203,18 +216,18 @@ namespace NHibernateMappingGenerator
             this.sequencesComboBox.Size = new System.Drawing.Size(597, 23);
             this.sequencesComboBox.TabIndex = 4;
             // 
-            // folderTextBox
+            // DomainFolderTextBox
             // 
-            this.folderTextBox.Location = new System.Drawing.Point(173, 46);
-            this.folderTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.folderTextBox.Name = "folderTextBox";
-            this.folderTextBox.Size = new System.Drawing.Size(647, 25);
-            this.folderTextBox.TabIndex = 7;
-            this.folderTextBox.Text = "c:\\NHibernate Mapping File Generator";
+            this.DomainFolderTextBox.Location = new System.Drawing.Point(211, 46);
+            this.DomainFolderTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.DomainFolderTextBox.Name = "DomainFolderTextBox";
+            this.DomainFolderTextBox.Size = new System.Drawing.Size(647, 25);
+            this.DomainFolderTextBox.TabIndex = 7;
+            this.DomainFolderTextBox.Text = "c:\\NHibernate Mapping File Generator";
             // 
             // generateButton
             // 
-            this.generateButton.Location = new System.Drawing.Point(15, 237);
+            this.generateButton.Location = new System.Drawing.Point(15, 233);
             this.generateButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.generateButton.Name = "generateButton";
             this.generateButton.Size = new System.Drawing.Size(141, 27);
@@ -225,12 +238,12 @@ namespace NHibernateMappingGenerator
             // 
             // folderSelectButton
             // 
-            this.folderSelectButton.Location = new System.Drawing.Point(831, 45);
+            this.folderSelectButton.Location = new System.Drawing.Point(869, 45);
             this.folderSelectButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.folderSelectButton.Name = "folderSelectButton";
             this.folderSelectButton.Size = new System.Drawing.Size(100, 27);
             this.folderSelectButton.TabIndex = 9;
-            this.folderSelectButton.Text = "&Select";
+            this.folderSelectButton.Text = "Select";
             this.folderSelectButton.UseVisualStyleBackColor = true;
             this.folderSelectButton.Click += new System.EventHandler(this.folderSelectButton_Click);
             // 
@@ -247,40 +260,30 @@ namespace NHibernateMappingGenerator
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 148);
+            this.label2.Location = new System.Drawing.Point(15, 144);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(167, 15);
             this.label2.TabIndex = 11;
             this.label2.Text = "Namespace (Domain) :";
             // 
-            // nameSpaceTextBox
+            // DomainNmespaceTextBox
             // 
-            this.nameSpaceTextBox.Location = new System.Drawing.Point(173, 143);
-            this.nameSpaceTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.nameSpaceTextBox.Name = "nameSpaceTextBox";
-            this.nameSpaceTextBox.Size = new System.Drawing.Size(647, 25);
-            this.nameSpaceTextBox.TabIndex = 12;
-            this.nameSpaceTextBox.Text = "Sample.CustomerService.Domain";
+            this.DomainNmespaceTextBox.Location = new System.Drawing.Point(211, 139);
+            this.DomainNmespaceTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.DomainNmespaceTextBox.Name = "DomainNmespaceTextBox";
+            this.DomainNmespaceTextBox.Size = new System.Drawing.Size(647, 25);
+            this.DomainNmespaceTextBox.TabIndex = 12;
+            this.DomainNmespaceTextBox.Text = "Sample.CustomerService.Domain";
             // 
-            // label3
+            // ReposityNamespaceTextBox
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 208);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(127, 15);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "Assembly Name :";
-            // 
-            // assemblyNameTextBox
-            // 
-            this.assemblyNameTextBox.Location = new System.Drawing.Point(173, 203);
-            this.assemblyNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.assemblyNameTextBox.Name = "assemblyNameTextBox";
-            this.assemblyNameTextBox.Size = new System.Drawing.Size(647, 25);
-            this.assemblyNameTextBox.TabIndex = 14;
-            this.assemblyNameTextBox.Text = "Sample.CustomerService";
+            this.ReposityNamespaceTextBox.Location = new System.Drawing.Point(211, 199);
+            this.ReposityNamespaceTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.ReposityNamespaceTextBox.Name = "ReposityNamespaceTextBox";
+            this.ReposityNamespaceTextBox.Size = new System.Drawing.Size(647, 25);
+            this.ReposityNamespaceTextBox.TabIndex = 14;
+            this.ReposityNamespaceTextBox.Text = "Sample.CustomerService.Reposity";
             // 
             // label5
             // 
@@ -294,7 +297,7 @@ namespace NHibernateMappingGenerator
             // 
             // generateAllBtn
             // 
-            this.generateAllBtn.Location = new System.Drawing.Point(512, 237);
+            this.generateAllBtn.Location = new System.Drawing.Point(520, 233);
             this.generateAllBtn.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.generateAllBtn.Name = "generateAllBtn";
             this.generateAllBtn.Size = new System.Drawing.Size(141, 27);
@@ -314,7 +317,7 @@ namespace NHibernateMappingGenerator
             this.mainTabControl.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.mainTabControl.Name = "mainTabControl";
             this.mainTabControl.SelectedIndex = 0;
-            this.mainTabControl.Size = new System.Drawing.Size(1564, 827);
+            this.mainTabControl.Size = new System.Drawing.Size(1458, 571);
             this.mainTabControl.TabIndex = 19;
             // 
             // basicSettingsTabPage
@@ -326,7 +329,7 @@ namespace NHibernateMappingGenerator
             this.basicSettingsTabPage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.basicSettingsTabPage.Name = "basicSettingsTabPage";
             this.basicSettingsTabPage.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.basicSettingsTabPage.Size = new System.Drawing.Size(1556, 798);
+            this.basicSettingsTabPage.Size = new System.Drawing.Size(1450, 542);
             this.basicSettingsTabPage.TabIndex = 1;
             this.basicSettingsTabPage.Text = "Basic";
             this.basicSettingsTabPage.UseVisualStyleBackColor = true;
@@ -348,7 +351,7 @@ namespace NHibernateMappingGenerator
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(0, 7, 0, 0);
-            this.splitContainer1.Size = new System.Drawing.Size(1548, 443);
+            this.splitContainer1.Size = new System.Drawing.Size(1442, 193);
             this.splitContainer1.SplitterDistance = 330;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 23;
@@ -363,7 +366,7 @@ namespace NHibernateMappingGenerator
             this.tableGroupBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tableGroupBox.Name = "tableGroupBox";
             this.tableGroupBox.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tableGroupBox.Size = new System.Drawing.Size(326, 439);
+            this.tableGroupBox.Size = new System.Drawing.Size(326, 189);
             this.tableGroupBox.TabIndex = 21;
             this.tableGroupBox.TabStop = false;
             this.tableGroupBox.Text = "Select Owner and Table(s)";
@@ -393,7 +396,7 @@ namespace NHibernateMappingGenerator
             this.tablesListBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tablesListBox.Name = "tablesListBox";
             this.tablesListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.tablesListBox.Size = new System.Drawing.Size(309, 319);
+            this.tablesListBox.Size = new System.Drawing.Size(309, 94);
             this.tablesListBox.TabIndex = 6;
             // 
             // ownersComboBox
@@ -411,19 +414,17 @@ namespace NHibernateMappingGenerator
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage8);
+            this.tabControl1.Controls.Add(this.tabPage9);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 7);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1209, 432);
+            this.tabControl1.Size = new System.Drawing.Size(1103, 182);
             this.tabControl1.TabIndex = 22;
             // 
             // tabPage1
@@ -433,7 +434,7 @@ namespace NHibernateMappingGenerator
             this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage1.Size = new System.Drawing.Size(1201, 403);
+            this.tabPage1.Size = new System.Drawing.Size(1095, 153);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Table Definition";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -451,37 +452,8 @@ namespace NHibernateMappingGenerator
             this.dbTableDetailsGridView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.dbTableDetailsGridView.Name = "dbTableDetailsGridView";
             this.dbTableDetailsGridView.RowHeadersVisible = false;
-            this.dbTableDetailsGridView.Size = new System.Drawing.Size(1193, 397);
+            this.dbTableDetailsGridView.Size = new System.Drawing.Size(1087, 147);
             this.dbTableDetailsGridView.TabIndex = 5;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.mapCodeFastColoredTextBox);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage2.Size = new System.Drawing.Size(1307, 407);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Map Code";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // mapCodeFastColoredTextBox
-            // 
-            this.mapCodeFastColoredTextBox.AutoScrollMinSize = new System.Drawing.Size(31, 18);
-            this.mapCodeFastColoredTextBox.BackBrush = null;
-            this.mapCodeFastColoredTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.mapCodeFastColoredTextBox.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.mapCodeFastColoredTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapCodeFastColoredTextBox.Font = new System.Drawing.Font("Courier New", 9.75F);
-            this.mapCodeFastColoredTextBox.IsReplaceMode = false;
-            this.mapCodeFastColoredTextBox.Location = new System.Drawing.Point(4, 3);
-            this.mapCodeFastColoredTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.mapCodeFastColoredTextBox.Name = "mapCodeFastColoredTextBox";
-            this.mapCodeFastColoredTextBox.Paddings = new System.Windows.Forms.Padding(0);
-            this.mapCodeFastColoredTextBox.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.mapCodeFastColoredTextBox.Size = new System.Drawing.Size(1299, 401);
-            this.mapCodeFastColoredTextBox.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -490,7 +462,7 @@ namespace NHibernateMappingGenerator
             this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.tabPage3.Size = new System.Drawing.Size(1307, 407);
+            this.tabPage3.Size = new System.Drawing.Size(1201, 409);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Domain Code";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -502,97 +474,206 @@ namespace NHibernateMappingGenerator
             this.domainCodeFastColoredTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.domainCodeFastColoredTextBox.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.domainCodeFastColoredTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.domainCodeFastColoredTextBox.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.domainCodeFastColoredTextBox.IsReplaceMode = false;
             this.domainCodeFastColoredTextBox.Location = new System.Drawing.Point(4, 3);
             this.domainCodeFastColoredTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.domainCodeFastColoredTextBox.Name = "domainCodeFastColoredTextBox";
             this.domainCodeFastColoredTextBox.Paddings = new System.Windows.Forms.Padding(0);
             this.domainCodeFastColoredTextBox.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
-            this.domainCodeFastColoredTextBox.Size = new System.Drawing.Size(1299, 401);
+            this.domainCodeFastColoredTextBox.Size = new System.Drawing.Size(1193, 403);
             this.domainCodeFastColoredTextBox.TabIndex = 0;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 25);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1307, 407);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Domain Code";
-            this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.fastColoredTextBox1);
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(1307, 407);
+            this.tabPage5.Size = new System.Drawing.Size(1201, 409);
             this.tabPage5.TabIndex = 0;
             this.tabPage5.Text = "Domain.Designer";
             // 
-            // tabPage6
+            // fastColoredTextBox1
             // 
-            this.tabPage6.Location = new System.Drawing.Point(4, 25);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(1307, 407);
-            this.tabPage6.TabIndex = 0;
-            this.tabPage6.Text = "Entity.Designer";
+            this.fastColoredTextBox1.AutoScrollMinSize = new System.Drawing.Size(31, 18);
+            this.fastColoredTextBox1.BackBrush = null;
+            this.fastColoredTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.fastColoredTextBox1.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.fastColoredTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fastColoredTextBox1.Font = new System.Drawing.Font("Courier New", 9.75F);
+            this.fastColoredTextBox1.IsReplaceMode = false;
+            this.fastColoredTextBox1.Location = new System.Drawing.Point(0, 0);
+            this.fastColoredTextBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.fastColoredTextBox1.Name = "fastColoredTextBox1";
+            this.fastColoredTextBox1.Paddings = new System.Windows.Forms.Padding(0);
+            this.fastColoredTextBox1.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.fastColoredTextBox1.Size = new System.Drawing.Size(1201, 409);
+            this.fastColoredTextBox1.TabIndex = 1;
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.fastColoredTextBox2);
             this.tabPage7.Location = new System.Drawing.Point(4, 25);
             this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(1307, 407);
+            this.tabPage7.Size = new System.Drawing.Size(1201, 409);
             this.tabPage7.TabIndex = 0;
             this.tabPage7.Text = "IReposity";
             // 
+            // fastColoredTextBox2
+            // 
+            this.fastColoredTextBox2.AutoScrollMinSize = new System.Drawing.Size(31, 18);
+            this.fastColoredTextBox2.BackBrush = null;
+            this.fastColoredTextBox2.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.fastColoredTextBox2.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.fastColoredTextBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fastColoredTextBox2.Font = new System.Drawing.Font("Courier New", 9.75F);
+            this.fastColoredTextBox2.IsReplaceMode = false;
+            this.fastColoredTextBox2.Location = new System.Drawing.Point(0, 0);
+            this.fastColoredTextBox2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.fastColoredTextBox2.Name = "fastColoredTextBox2";
+            this.fastColoredTextBox2.Paddings = new System.Windows.Forms.Padding(0);
+            this.fastColoredTextBox2.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.fastColoredTextBox2.Size = new System.Drawing.Size(1201, 409);
+            this.fastColoredTextBox2.TabIndex = 1;
+            // 
             // tabPage8
             // 
+            this.tabPage8.Controls.Add(this.fastColoredTextBox3);
             this.tabPage8.Location = new System.Drawing.Point(4, 25);
             this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Size = new System.Drawing.Size(1307, 407);
+            this.tabPage8.Size = new System.Drawing.Size(1201, 409);
             this.tabPage8.TabIndex = 0;
             this.tabPage8.Text = "Reposity";
             // 
+            // fastColoredTextBox3
+            // 
+            this.fastColoredTextBox3.AutoScrollMinSize = new System.Drawing.Size(31, 18);
+            this.fastColoredTextBox3.BackBrush = null;
+            this.fastColoredTextBox3.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.fastColoredTextBox3.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.fastColoredTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fastColoredTextBox3.Font = new System.Drawing.Font("Courier New", 9.75F);
+            this.fastColoredTextBox3.IsReplaceMode = false;
+            this.fastColoredTextBox3.Location = new System.Drawing.Point(0, 0);
+            this.fastColoredTextBox3.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.fastColoredTextBox3.Name = "fastColoredTextBox3";
+            this.fastColoredTextBox3.Paddings = new System.Windows.Forms.Padding(0);
+            this.fastColoredTextBox3.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.fastColoredTextBox3.Size = new System.Drawing.Size(1201, 409);
+            this.fastColoredTextBox3.TabIndex = 1;
+            // 
+            // tabPage9
+            // 
+            this.tabPage9.Controls.Add(this.fastColoredTextBox4);
+            this.tabPage9.Location = new System.Drawing.Point(4, 25);
+            this.tabPage9.Name = "tabPage9";
+            this.tabPage9.Size = new System.Drawing.Size(1201, 409);
+            this.tabPage9.TabIndex = 3;
+            this.tabPage9.Text = "Reposity.Designer";
+            this.tabPage9.UseVisualStyleBackColor = true;
+            // 
+            // fastColoredTextBox4
+            // 
+            this.fastColoredTextBox4.AutoScrollMinSize = new System.Drawing.Size(31, 18);
+            this.fastColoredTextBox4.BackBrush = null;
+            this.fastColoredTextBox4.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.fastColoredTextBox4.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.fastColoredTextBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fastColoredTextBox4.Font = new System.Drawing.Font("Courier New", 9.75F);
+            this.fastColoredTextBox4.IsReplaceMode = false;
+            this.fastColoredTextBox4.Location = new System.Drawing.Point(0, 0);
+            this.fastColoredTextBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.fastColoredTextBox4.Name = "fastColoredTextBox4";
+            this.fastColoredTextBox4.Paddings = new System.Windows.Forms.Padding(0);
+            this.fastColoredTextBox4.SelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(255)))));
+            this.fastColoredTextBox4.Size = new System.Drawing.Size(1201, 409);
+            this.fastColoredTextBox4.TabIndex = 1;
+            // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.checkBox3);
+            this.groupBox5.Controls.Add(this.checkBox2);
+            this.groupBox5.Controls.Add(this.checkBox1);
             this.groupBox5.Controls.Add(this.cancelButton);
+            this.groupBox5.Controls.Add(this.label10);
             this.groupBox5.Controls.Add(this.label9);
             this.groupBox5.Controls.Add(this.label8);
-            this.groupBox5.Controls.Add(this.label6);
-            this.groupBox5.Controls.Add(this.entityNameTextBox);
-            this.groupBox5.Controls.Add(this.domainFolderTextBox);
-            this.groupBox5.Controls.Add(this.folderTextBox);
+            this.groupBox5.Controls.Add(this.ReposityFolderTextBox);
+            this.groupBox5.Controls.Add(this.IReposityFolderTextBox);
+            this.groupBox5.Controls.Add(this.DomainFolderTextBox);
+            this.groupBox5.Controls.Add(this.button1);
             this.groupBox5.Controls.Add(this.label1);
             this.groupBox5.Controls.Add(this.domainFolderSelectButton);
             this.groupBox5.Controls.Add(this.generateAllBtn);
             this.groupBox5.Controls.Add(this.folderSelectButton);
-            this.groupBox5.Controls.Add(this.assemblyNameTextBox);
+            this.groupBox5.Controls.Add(this.ReposityNamespaceTextBox);
+            this.groupBox5.Controls.Add(this.label3);
             this.groupBox5.Controls.Add(this.label4);
             this.groupBox5.Controls.Add(this.label2);
             this.groupBox5.Controls.Add(this.generateButton);
-            this.groupBox5.Controls.Add(this.label3);
-            this.groupBox5.Controls.Add(this.namespaceMapTextBox);
-            this.groupBox5.Controls.Add(this.nameSpaceTextBox);
+            this.groupBox5.Controls.Add(this.IReposityNamespaceTextBox);
+            this.groupBox5.Controls.Add(this.DomainNmespaceTextBox);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox5.Location = new System.Drawing.Point(4, 519);
+            this.groupBox5.Location = new System.Drawing.Point(4, 269);
             this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox5.Size = new System.Drawing.Size(1548, 276);
+            this.groupBox5.Size = new System.Drawing.Size(1442, 270);
             this.groupBox5.TabIndex = 20;
             this.groupBox5.TabStop = false;
             // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(985, 110);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(113, 19);
+            this.checkBox3.TabIndex = 23;
+            this.checkBox3.Text = "覆盖.cs文件";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(985, 79);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(239, 19);
+            this.checkBox2.TabIndex = 23;
+            this.checkBox2.Text = "忽略可为空，所有属性皆为非空";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(985, 48);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(402, 19);
+            this.checkBox1.TabIndex = 23;
+            this.checkBox1.Text = "聚合根(继承自AggregateRoot,否则继承自BaseEntity)";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(680, 237);
+            this.cancelButton.Location = new System.Drawing.Point(688, 233);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(141, 27);
             this.cancelButton.TabIndex = 22;
             this.cancelButton.Text = "Cance&l";
             this.cancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.Visible = false;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(15, 112);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(127, 15);
+            this.label10.TabIndex = 19;
+            this.label10.Text = "Reposity File :";
             // 
             // label9
             // 
@@ -600,9 +681,9 @@ namespace NHibernateMappingGenerator
             this.label9.Location = new System.Drawing.Point(15, 81);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(111, 15);
+            this.label9.Size = new System.Drawing.Size(135, 15);
             this.label9.TabIndex = 19;
-            this.label9.Text = "Domain File :";
+            this.label9.Text = "IReposity File :";
             // 
             // label8
             // 
@@ -610,69 +691,83 @@ namespace NHibernateMappingGenerator
             this.label8.Location = new System.Drawing.Point(15, 51);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(87, 15);
+            this.label8.Size = new System.Drawing.Size(111, 15);
             this.label8.TabIndex = 19;
-            this.label8.Text = "Map File :";
+            this.label8.Text = "Domain File :";
             // 
-            // label6
+            // ReposityFolderTextBox
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 114);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(111, 15);
-            this.label6.TabIndex = 19;
-            this.label6.Text = "Entity Name :";
+            this.ReposityFolderTextBox.Location = new System.Drawing.Point(211, 108);
+            this.ReposityFolderTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.ReposityFolderTextBox.Name = "ReposityFolderTextBox";
+            this.ReposityFolderTextBox.Size = new System.Drawing.Size(647, 25);
+            this.ReposityFolderTextBox.TabIndex = 7;
+            this.ReposityFolderTextBox.Text = "c:\\NHibernate Mapping File Generator";
             // 
-            // entityNameTextBox
+            // IReposityFolderTextBox
             // 
-            this.entityNameTextBox.Location = new System.Drawing.Point(173, 110);
-            this.entityNameTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.entityNameTextBox.Name = "entityNameTextBox";
-            this.entityNameTextBox.Size = new System.Drawing.Size(647, 25);
-            this.entityNameTextBox.TabIndex = 20;
+            this.IReposityFolderTextBox.Location = new System.Drawing.Point(211, 77);
+            this.IReposityFolderTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.IReposityFolderTextBox.Name = "IReposityFolderTextBox";
+            this.IReposityFolderTextBox.Size = new System.Drawing.Size(647, 25);
+            this.IReposityFolderTextBox.TabIndex = 7;
+            this.IReposityFolderTextBox.Text = "c:\\NHibernate Mapping File Generator";
             // 
-            // domainFolderTextBox
+            // button1
             // 
-            this.domainFolderTextBox.Location = new System.Drawing.Point(173, 77);
-            this.domainFolderTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.domainFolderTextBox.Name = "domainFolderTextBox";
-            this.domainFolderTextBox.Size = new System.Drawing.Size(647, 25);
-            this.domainFolderTextBox.TabIndex = 7;
-            this.domainFolderTextBox.Text = "c:\\NHibernate Mapping File Generator";
+            this.button1.Location = new System.Drawing.Point(869, 107);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(100, 27);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Select";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.domainFolderSelectButton_Click);
             // 
             // domainFolderSelectButton
             // 
-            this.domainFolderSelectButton.Location = new System.Drawing.Point(831, 76);
+            this.domainFolderSelectButton.Location = new System.Drawing.Point(869, 76);
             this.domainFolderSelectButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.domainFolderSelectButton.Name = "domainFolderSelectButton";
             this.domainFolderSelectButton.Size = new System.Drawing.Size(100, 27);
             this.domainFolderSelectButton.TabIndex = 9;
-            this.domainFolderSelectButton.Text = "&Select";
+            this.domainFolderSelectButton.Text = "Select";
             this.domainFolderSelectButton.UseVisualStyleBackColor = true;
             this.domainFolderSelectButton.Click += new System.EventHandler(this.domainFolderSelectButton_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(15, 202);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(183, 15);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Namespace (Reposity) :";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 178);
+            this.label4.Location = new System.Drawing.Point(15, 174);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(143, 15);
+            this.label4.Size = new System.Drawing.Size(191, 15);
             this.label4.TabIndex = 11;
-            this.label4.Text = "Namespace (Map) :";
+            this.label4.Text = "Namespace (IReposity) :";
             // 
-            // namespaceMapTextBox
+            // IReposityNamespaceTextBox
             // 
-            this.namespaceMapTextBox.Location = new System.Drawing.Point(173, 173);
-            this.namespaceMapTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.namespaceMapTextBox.Name = "namespaceMapTextBox";
-            this.namespaceMapTextBox.Size = new System.Drawing.Size(647, 25);
-            this.namespaceMapTextBox.TabIndex = 12;
-            this.namespaceMapTextBox.Text = "Sample.CustomerService.Maps";
+            this.IReposityNamespaceTextBox.Location = new System.Drawing.Point(211, 169);
+            this.IReposityNamespaceTextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.IReposityNamespaceTextBox.Name = "IReposityNamespaceTextBox";
+            this.IReposityNamespaceTextBox.Size = new System.Drawing.Size(647, 25);
+            this.IReposityNamespaceTextBox.TabIndex = 12;
+            this.IReposityNamespaceTextBox.Text = "Sample.CustomerService.IReposity";
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.checkBox4);
+            this.groupBox4.Controls.Add(this.button2);
             this.groupBox4.Controls.Add(this.connectionNameComboBox);
             this.groupBox4.Controls.Add(this.pOracleOnlyOptions);
             this.groupBox4.Controls.Add(this.dbConnStrLabel);
@@ -683,7 +778,7 @@ namespace NHibernateMappingGenerator
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.groupBox4.Size = new System.Drawing.Size(1548, 73);
+            this.groupBox4.Size = new System.Drawing.Size(1442, 73);
             this.groupBox4.TabIndex = 19;
             this.groupBox4.TabStop = false;
             this.groupBox4.Tag = "";
@@ -701,14 +796,13 @@ namespace NHibernateMappingGenerator
             // 
             // pOracleOnlyOptions
             // 
-            this.pOracleOnlyOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pOracleOnlyOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pOracleOnlyOptions.Controls.Add(this.label5);
             this.pOracleOnlyOptions.Controls.Add(this.sequencesComboBox);
-            this.pOracleOnlyOptions.Location = new System.Drawing.Point(796, 22);
+            this.pOracleOnlyOptions.Location = new System.Drawing.Point(1133, 17);
             this.pOracleOnlyOptions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pOracleOnlyOptions.Name = "pOracleOnlyOptions";
-            this.pOracleOnlyOptions.Size = new System.Drawing.Size(748, 50);
+            this.pOracleOnlyOptions.Size = new System.Drawing.Size(301, 50);
             this.pOracleOnlyOptions.TabIndex = 20;
             // 
             // connectionButton
@@ -1305,10 +1399,10 @@ namespace NHibernateMappingGenerator
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 832);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 576);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1564, 24);
+            this.statusStrip1.Size = new System.Drawing.Size(1458, 24);
             this.statusStrip1.TabIndex = 23;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -1320,7 +1414,7 @@ namespace NHibernateMappingGenerator
             this.toolStripStatusLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripStatusLabel.ForeColor = System.Drawing.Color.Red;
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(1142, 19);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(1036, 19);
             this.toolStripStatusLabel.Spring = true;
             this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -1394,11 +1488,33 @@ namespace NHibernateMappingGenerator
             this.columnName.Name = "columnName";
             this.columnName.ReadOnly = true;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(487, 37);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(183, 23);
+            this.button2.TabIndex = 22;
+            this.button2.Text = "生成配置文件到...";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Checked = true;
+            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox4.Location = new System.Drawing.Point(489, 17);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(89, 19);
+            this.checkBox4.TabIndex = 23;
+            this.checkBox4.Text = "加密连接";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
             // App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1564, 856);
+            this.ClientSize = new System.Drawing.Size(1458, 600);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.mainTabControl);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1417,10 +1533,16 @@ namespace NHibernateMappingGenerator
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dbTableDetailsGridView)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mapCodeFastColoredTextBox)).EndInit();
             this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.domainCodeFastColoredTextBox)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox1)).EndInit();
+            this.tabPage7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox2)).EndInit();
+            this.tabPage8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox3)).EndInit();
+            this.tabPage9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox4)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -1457,14 +1579,13 @@ namespace NHibernateMappingGenerator
         private System.Windows.Forms.Button connectBtn;
         private System.Windows.Forms.ComboBox sequencesComboBox;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
-        private System.Windows.Forms.TextBox folderTextBox;
+        private System.Windows.Forms.TextBox DomainFolderTextBox;
         private System.Windows.Forms.Button generateButton;
         private System.Windows.Forms.Button folderSelectButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox nameSpaceTextBox;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox assemblyNameTextBox;
+        private System.Windows.Forms.TextBox DomainNmespaceTextBox;
+        private System.Windows.Forms.TextBox ReposityNamespaceTextBox;
         private Label label5;
         private Button generateAllBtn;
         private TabControl mainTabControl;
@@ -1490,8 +1611,6 @@ namespace NHibernateMappingGenerator
         private RadioButton propertyRadioBtn;
         private RadioButton fieldRadioBtn;
         private RadioButton autoPropertyRadioBtn;
-        private Label label6;
-        private TextBox entityNameTextBox;
         private RadioButton castleMappingOption;
         private ComboBox ownersComboBox;
         private RadioButton pascalCasedRadioButton;
@@ -1523,18 +1642,16 @@ namespace NHibernateMappingGenerator
         private Button connectionButton;
         private SplitContainer splitContainer1;
         private TabControl tabControl1;
-        private TabPage tabPage2;
         private TabPage tabPage3;
-        private FastColoredTextBoxNS.FastColoredTextBox mapCodeFastColoredTextBox;
         private FastColoredTextBoxNS.FastColoredTextBox domainCodeFastColoredTextBox;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolStripProgressBar toolStripProgressBar1;
         private Label label4;
-        private TextBox namespaceMapTextBox;
+        private TextBox IReposityNamespaceTextBox;
         private Label label9;
         private Label label8;
-        private TextBox domainFolderTextBox;
+        private TextBox IReposityFolderTextBox;
         private Button domainFolderSelectButton;
         private GroupBox validationStyleGroupBox;
         private RadioButton dataAnnotationsRadioButton;
@@ -1546,9 +1663,7 @@ namespace NHibernateMappingGenerator
         private RadioButton entityFrameworkRadionBtn;
         private TabPage tabPage1;
         private DataGridView dbTableDetailsGridView;
-        private TabPage tabPage4;
         private TabPage tabPage5;
-        private TabPage tabPage6;
         private TabPage tabPage7;
         private TabPage tabPage8;
         private DataGridViewTextBoxColumn ForeignKeyColumnName;
@@ -1562,6 +1677,20 @@ namespace NHibernateMappingGenerator
         private DataGridViewComboBoxColumn cSharpType;
         private DataGridViewTextBoxColumn columnDataType;
         private DataGridViewTextBoxColumn columnName;
+        private TabPage tabPage9;
+        private CheckBox checkBox1;
+        private Label label10;
+        private TextBox ReposityFolderTextBox;
+        private Button button1;
+        private Label label3;
+        private CheckBox checkBox2;
+        private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox1;
+        private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox2;
+        private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox3;
+        private FastColoredTextBoxNS.FastColoredTextBox fastColoredTextBox4;
+        private CheckBox checkBox3;
+        private Button button2;
+        private CheckBox checkBox4;
     }
 }
 

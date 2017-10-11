@@ -22,7 +22,18 @@ namespace NHibernateMappingGenerator
         private ApplicationSettings applicationSettings;
         private IList<Table> _tables;
         private Connection _currentConnection;
-
+        MySetting mySetting
+        {
+            get
+            {
+                if (applicationSettings != null) return applicationSettings.mySetting;
+                return null;
+            }
+            set
+            {
+                applicationSettings.mySetting = value;
+            }
+        }
         public App()
         {
             InitializeComponent();
@@ -37,7 +48,7 @@ namespace NHibernateMappingGenerator
             sequencesComboBox.Enabled = false;
             TableFilterTextBox.Enabled = false;
             Closing += App_Closing;
-            worker = new BackgroundWorker {WorkerSupportsCancellation = true};
+            worker = new BackgroundWorker { WorkerSupportsCancellation = true };
         }
 
         private void OnTableDetailsCellDirty(object sender, EventArgs e)
@@ -60,13 +71,13 @@ namespace NHibernateMappingGenerator
             }
 
             var connectionDialog = new ConnectionDialog();
-            
+
             // Edit current connection
             if (_currentConnection != null)
             {
                 connectionDialog.Connection = _currentConnection;
             }
-            
+
             var result = connectionDialog.ShowDialog();
             switch (result)
             {
@@ -100,7 +111,7 @@ namespace NHibernateMappingGenerator
         {
             if (connectionNameComboBox.SelectedItem == null) return;
 
-            _currentConnection = (Connection) connectionNameComboBox.SelectedItem;
+            _currentConnection = (Connection)connectionNameComboBox.SelectedItem;
 
             pOracleOnlyOptions.Hide();
 
@@ -128,17 +139,27 @@ namespace NHibernateMappingGenerator
         {
             get { return castleMappingOption.Checked; }
         }
-  
+
         public bool IsByCode
         {
-            get { return byCodeMappingOption.Checked;}
+            get { return byCodeMappingOption.Checked; }
         }
-        
+
         protected override void OnLoad(EventArgs e)
         {
             LoadApplicationSettings();
         }
 
+        void LoadMySetting()
+        {
+            if (mySetting == null) mySetting = new MySetting();
+            DomainFolderTextBox.Text = mySetting.DominFolderPath;
+            IReposityFolderTextBox.Text = mySetting.IReposityFolderPath;
+            ReposityFolderTextBox.Text = mySetting.ReposityFolderPath;
+            DomainNmespaceTextBox.Text = mySetting.DominNamespace;
+            IReposityNamespaceTextBox.Text = mySetting.IReposityNamespace;
+            ReposityNamespaceTextBox.Text = mySetting.ReposityNamespace;
+        }
         private void LoadApplicationSettings()
         {
             applicationSettings = ApplicationSettings.Load();
@@ -154,17 +175,17 @@ namespace NHibernateMappingGenerator
                 _currentConnection = lastUsedConnection ?? applicationSettings.Connections.FirstOrDefault();
                 connectionNameComboBox.SelectedItem = _currentConnection;
 
-                nameSpaceTextBox.Text = applicationSettings.NameSpace;
-                namespaceMapTextBox.Text = applicationSettings.NameSpaceMap;
-                assemblyNameTextBox.Text = applicationSettings.AssemblyName;
+                DomainNmespaceTextBox.Text = applicationSettings.NameSpace;
+                IReposityNamespaceTextBox.Text = applicationSettings.NameSpaceMap;
+                ReposityNamespaceTextBox.Text = applicationSettings.AssemblyName;
                 cSharpRadioButton.Checked = applicationSettings.Language == Language.CSharp;
                 vbRadioButton.Checked = applicationSettings.Language == Language.VB;
                 noValidationRadioButton.Checked = applicationSettings.ValidationStyle == ValidationStyle.None;
                 nhibernateValidationRadioButton.Checked = applicationSettings.ValidationStyle == ValidationStyle.Nhibernate;
                 dataAnnotationsRadioButton.Checked = applicationSettings.ValidationStyle == ValidationStyle.Microsoft;
                 autoPropertyRadioBtn.Checked = applicationSettings.IsAutoProperty;
-                folderTextBox.Text = applicationSettings.FolderPath;
-                domainFolderTextBox.Text = applicationSettings.DomainFolderPath;
+                DomainFolderTextBox.Text = applicationSettings.FolderPath;
+                IReposityFolderTextBox.Text = applicationSettings.DomainFolderPath;
                 textBoxInheritence.Text = applicationSettings.InheritenceAndInterfaces;
                 comboBoxForeignCollection.Text = applicationSettings.ForeignEntityCollectionType;
                 textBoxClassNamePrefix.Text = applicationSettings.ClassNamePrefix;
@@ -214,7 +235,7 @@ namespace NHibernateMappingGenerator
                 useLazyLoadingCheckBox.Checked = true;
 
                 comboBoxForeignCollection.Text = "IList";
-                
+
                 CaptureApplicationSettings();
             }
 
@@ -222,7 +243,7 @@ namespace NHibernateMappingGenerator
             {
                 prefixLabel.Visible = prefixTextBox.Visible = false;
             }
-
+            LoadMySetting();
         }
 
         private void ToggleColumnsBasedOnAppSettings(ApplicationSettings appSettings)
@@ -274,19 +295,54 @@ namespace NHibernateMappingGenerator
                 domainCodeFastColoredTextBox.Language = FastColoredTextBoxNS.Language.VB;
             }
 
-            // Map Code Formatting
-            if (appSettings.Language == Language.CSharp & appSettings.IsByCode || appSettings.IsFluent || appSettings.IsNhFluent || appSettings.IsCastle || appSettings.IsEntityFramework)
+            if (appSettings.Language == Language.CSharp)
             {
-                mapCodeFastColoredTextBox.Language = FastColoredTextBoxNS.Language.CSharp;
+                fastColoredTextBox1.Language = FastColoredTextBoxNS.Language.CSharp;
             }
-            else if (appSettings.Language == Language.VB & appSettings.IsByCode || appSettings.IsFluent || appSettings.IsNhFluent || appSettings.IsCastle || appSettings.IsEntityFramework)
+            else if (appSettings.Language == Language.VB)
             {
-                mapCodeFastColoredTextBox.Language = FastColoredTextBoxNS.Language.VB;
+                fastColoredTextBox1.Language = FastColoredTextBoxNS.Language.VB;
             }
-            else
+
+            if (appSettings.Language == Language.CSharp)
             {
-                mapCodeFastColoredTextBox.Language = FastColoredTextBoxNS.Language.HTML;
+                fastColoredTextBox2.Language = FastColoredTextBoxNS.Language.CSharp;
             }
+            else if (appSettings.Language == Language.VB)
+            {
+                fastColoredTextBox2.Language = FastColoredTextBoxNS.Language.VB;
+            }
+
+            if (appSettings.Language == Language.CSharp)
+            {
+                fastColoredTextBox3.Language = FastColoredTextBoxNS.Language.CSharp;
+            }
+            else if (appSettings.Language == Language.VB)
+            {
+                fastColoredTextBox3.Language = FastColoredTextBoxNS.Language.VB;
+            }
+
+            if (appSettings.Language == Language.CSharp)
+            {
+                fastColoredTextBox4.Language = FastColoredTextBoxNS.Language.CSharp;
+            }
+            else if (appSettings.Language == Language.VB)
+            {
+                fastColoredTextBox4.Language = FastColoredTextBoxNS.Language.VB;
+            }
+            //// Map Code Formatting
+            //if (appSettings.Language == Language.CSharp & appSettings.IsByCode || appSettings.IsFluent || appSettings.IsNhFluent || appSettings.IsCastle || appSettings.IsEntityFramework)
+            //{
+            //    mapCodeFastColoredTextBox.Language = FastColoredTextBoxNS.Language.CSharp;
+            //}
+            //else if (appSettings.Language == Language.VB & appSettings.IsByCode || appSettings.IsFluent || appSettings.IsNhFluent || appSettings.IsCastle || appSettings.IsEntityFramework)
+            //{
+            //    mapCodeFastColoredTextBox.Language = FastColoredTextBoxNS.Language.VB;
+            //}
+            //else
+            //{
+            //    mapCodeFastColoredTextBox.Language = FastColoredTextBoxNS.Language.HTML;
+            //}
         }
 
         private void DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -306,9 +362,9 @@ namespace NHibernateMappingGenerator
             {
                 applicationSettings = new ApplicationSettings();
             }
-            applicationSettings.NameSpace = nameSpaceTextBox.Text;
-            applicationSettings.NameSpaceMap = namespaceMapTextBox.Text;
-            applicationSettings.AssemblyName = assemblyNameTextBox.Text;
+            applicationSettings.NameSpace = DomainNmespaceTextBox.Text;
+            applicationSettings.NameSpaceMap = IReposityNamespaceTextBox.Text;
+            applicationSettings.AssemblyName = ReposityNamespaceTextBox.Text;
             applicationSettings.Language = cSharpRadioButton.Checked ? Language.CSharp : Language.VB;
 
             var validationStyle = ValidationStyle.None;
@@ -319,8 +375,8 @@ namespace NHibernateMappingGenerator
             applicationSettings.IsFluent = fluentMappingOption.Checked;
             applicationSettings.IsEntityFramework = entityFrameworkRadionBtn.Checked;
             applicationSettings.IsAutoProperty = autoPropertyRadioBtn.Checked;
-            applicationSettings.FolderPath = folderTextBox.Text;
-            applicationSettings.DomainFolderPath = domainFolderTextBox.Text;
+            applicationSettings.FolderPath = DomainFolderTextBox.Text;
+            applicationSettings.DomainFolderPath = IReposityFolderTextBox.Text;
             applicationSettings.InheritenceAndInterfaces = textBoxInheritence.Text;
             applicationSettings.ForeignEntityCollectionType = comboBoxForeignCollection.Text;
             applicationSettings.FieldPrefixRemovalList = applicationSettings.FieldPrefixRemovalList;
@@ -338,7 +394,8 @@ namespace NHibernateMappingGenerator
             applicationSettings.NameFkAsForeignTable = nameAsForeignTableCheckBox.Checked;
             applicationSettings.IncludeHasMany = includeHasManyCheckBox.Checked;
             applicationSettings.IncludeLengthAndScale = includeLengthAndScaleCheckBox.Checked;
-            applicationSettings.LastUsedConnection = _currentConnection == null ? (Guid?) null : _currentConnection.Id;
+            applicationSettings.LastUsedConnection = _currentConnection == null ? (Guid?)null : _currentConnection.Id;
+            CaptureMySetting();
         }
 
         private void BindData()
@@ -385,18 +442,22 @@ namespace NHibernateMappingGenerator
 
                     if (table != null)
                     {
-                        CaptureApplicationSettings();
+                        //  CaptureApplicationSettings();
 
                         PopulateTableDetails(table);
 
-                        ToggleColumnsBasedOnAppSettings(applicationSettings);
+                        //  ToggleColumnsBasedOnAppSettings(applicationSettings);
 
-                        GenerateAndDisplayCode(table);
+                        //  GenerateAndDisplayCode(table);
 
-                        // Display entity name based on formatted table name
-                        var appPreferences = GetApplicationPreferences(table, false, applicationSettings);
-                        var formatter = TextFormatterFactory.GetTextFormatter(appPreferences);
-                        entityNameTextBox.Text = formatter.FormatText(table.Name);
+                        //// Display entity name based on formatted table name
+                        //var appPreferences = GetApplicationPreferences(table, false, applicationSettings);
+                        //var formatter = TextFormatterFactory.GetTextFormatter(appPreferences);
+                        ////  entityNameTextBox.Text = formatter.FormatText(table.Name);
+
+                        metadataReader.GetTableDetails(table, ownersComboBox.SelectedItem.ToString());
+                        CaptureMySetting();
+                        Generate(table);
                     }
                 }
             }
@@ -416,7 +477,7 @@ namespace NHibernateMappingGenerator
 
         private int? LastTableSelected()
         {
-            int? lastTableIndex = null;  
+            int? lastTableIndex = null;
             foreach (int i in tablesListBox.SelectedIndices)
             {
                 if (_cachedTableListSelection.Contains(i))
@@ -444,7 +505,7 @@ namespace NHibernateMappingGenerator
                 dbTableDetailsGridView.SuspendLayout();
                 dbTableDetailsGridView.DataSource = gridData;
                 dbTableDetailsGridView.ResumeLayout();
-                
+
             }
             catch (Exception ex)
             {
@@ -524,7 +585,7 @@ namespace NHibernateMappingGenerator
                     TableFilterTextBox.Enabled = true;
                     tablesListBox.SelectedItem = _tables.FirstOrDefault();
                 }
-                
+
                 var sequences = metadataReader.GetSequences(ownersComboBox.SelectedItem.ToString());
                 sequencesComboBox.Enabled = false;
                 sequencesComboBox.Items.Clear();
@@ -550,7 +611,7 @@ namespace NHibernateMappingGenerator
 
             if (diagResult == DialogResult.OK)
             {
-                folderTextBox.Text = folderBrowserDialog.SelectedPath;
+                DomainFolderTextBox.Text = folderBrowserDialog.SelectedPath;
             }
         }
 
@@ -560,10 +621,28 @@ namespace NHibernateMappingGenerator
 
             if (diagResult == DialogResult.OK)
             {
-                domainFolderTextBox.Text = folderBrowserDialog.SelectedPath;
+                if (((Button)sender).Name == domainFolderSelectButton.Name)
+                    IReposityFolderTextBox.Text = folderBrowserDialog.SelectedPath;
+                else
+                    ReposityFolderTextBox.Text = folderBrowserDialog.SelectedPath;
             }
         }
 
+        void CaptureMySetting()
+        {
+            if (mySetting == null)
+                mySetting = new MySetting();
+            mySetting.IsAggregateRoot = checkBox1.Checked;
+            mySetting.IsIgnoreNull = checkBox2.Checked;
+            mySetting.IsReWroteCsFile = checkBox3.Checked;
+            mySetting.IReposityFolderPath = IReposityFolderTextBox.Text;
+            mySetting.IReposityNamespace = IReposityNamespaceTextBox.Text;
+            mySetting.ReposityFolderPath = ReposityFolderTextBox.Text;
+            mySetting.ReposityNamespace = ReposityNamespaceTextBox.Text;
+            mySetting.DominFolderPath = DomainFolderTextBox.Text;
+            mySetting.DominNamespace = DomainNmespaceTextBox.Text;
+            mySetting.DbConnectionName = connectionNameComboBox.Text;
+        }
         private void GenerateClicked(object sender, EventArgs e)
         {
             toolStripStatusLabel.Text = string.Empty;
@@ -580,8 +659,10 @@ namespace NHibernateMappingGenerator
                     toolStripStatusLabel.Text = string.Format("Generating {0} mapping file ...", selectedItem);
                     var table = (Table)selectedItem;
                     metadataReader.GetTableDetails(table, ownersComboBox.SelectedItem.ToString());
-                    CaptureApplicationSettings();
-                    Generate(table, selectedItems.Count > 1, applicationSettings);                
+                    // CaptureApplicationSettings();
+                    CaptureMySetting();
+                    //  Generate(table, selectedItems.Count > 1, applicationSettings);
+                    Generate(table, true);
                 }
                 toolStripStatusLabel.Text = @"Generated all files successfully.";
             }
@@ -590,7 +671,52 @@ namespace NHibernateMappingGenerator
                 toolStripStatusLabel.Text = ex.Message;
             }
         }
+        void Generate(Table tb, bool isToFile = false)
+        {
+            //生成domain.cs
+            string domainCs = CodeMaker.MakeDomainCs(tb, mySetting);
+            //生成domain.designer.cs
+            string domainDesignerCs = CodeMaker.MakeDomainDesignerCs(tb, mySetting);
+            //生成IReposity
+            string ireposityCs = CodeMaker.MakeIReposityCs(tb, mySetting);
+            //生成Reposity.cs
+            string reposityCs = CodeMaker.MakeReposityCs(tb, mySetting);
+            //生成Reposity.designer.cs
+            string reposityDesignerCs = CodeMaker.MakeReposityDesignerCs(tb, mySetting);
+            if (!isToFile)
+            {
+                domainCodeFastColoredTextBox.Text = domainCs;
+                fastColoredTextBox1.Text = domainDesignerCs;
+                fastColoredTextBox2.Text = ireposityCs;
+                fastColoredTextBox3.Text = reposityCs;
+                fastColoredTextBox4.Text = reposityDesignerCs;
+            }
+            else
+            {
+                WriteToFile(mySetting.DominFolderPath, tb.ClassName + ".cs", domainCs, mySetting.IsReWroteCsFile);
+                WriteToFile(mySetting.IReposityFolderPath, "I" + tb.ClassName + "Reposity.cs", ireposityCs, mySetting.IsReWroteCsFile);
+                WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.cs", reposityCs, mySetting.IsReWroteCsFile);
+                WriteToFile(mySetting.DominFolderPath, tb.ClassName + ".designer.cs", domainDesignerCs, true);
+                WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.designer.cs", reposityDesignerCs, true);
+            }
+        }
+        void WriteToFile(string folder, string fileName, string content, bool isCover = true)
+        {
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
 
+            string path = Path.Combine(folder, fileName);
+            if (!isCover && File.Exists(path))
+                return;
+            FileStream fs = new FileStream(path, FileMode.Create);
+            //获得字节数组
+            byte[] data = System.Text.Encoding.Default.GetBytes(content);
+            //开始写入
+            fs.Write(data, 0, data.Length);
+            //清空缓冲区、关闭流
+            fs.Flush();
+            fs.Close();
+        }
         private void GenerateAllClicked(object sender, EventArgs e)
         {
             toolStripStatusLabel.Text = string.Empty;
@@ -622,7 +748,7 @@ namespace NHibernateMappingGenerator
                 toolStripStatusLabel.Text = ex.Message;
             }
         }
-     
+
         private void WorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             toolStripProgressBar1.Value = 100;
@@ -631,9 +757,9 @@ namespace NHibernateMappingGenerator
 
         private void DoWork(object sender, DoWorkEventArgs e)
         {
-            var appSettings = e.Argument as ApplicationSettings; 
+            var appSettings = e.Argument as ApplicationSettings;
             var items = tablesListBox.Items;
-            var pOptions = new ParallelOptions {MaxDegreeOfParallelism = Environment.ProcessorCount};
+            var pOptions = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
             Parallel.ForEach(items.Cast<Table>(), pOptions, (table, loopState) =>
             {
                 if (worker != null && worker.CancellationPending && !loopState.IsStopped)
@@ -645,18 +771,20 @@ namespace NHibernateMappingGenerator
                 string name = "";
                 if (ownersComboBox.InvokeRequired)
                 {
-                    ownersComboBox.Invoke(new MethodInvoker(delegate {
-                        name = ownersComboBox.SelectedItem.ToString(); }));
+                    ownersComboBox.Invoke(new MethodInvoker(delegate
+                    {
+                        name = ownersComboBox.SelectedItem.ToString();
+                    }));
                 }
                 else
                 {
                     name = ownersComboBox.SelectedItem.ToString();
                 }
                 metadataReader.GetTableDetails(table, name);
-                Generate(table, true, appSettings);
+                Generate(table, true);
             });
         }
-        
+
         private void Generate(Table table, bool generateAll, ApplicationSettings appSettings)
         {
             var applicationPreferences = GetApplicationPreferences(table, generateAll, appSettings);
@@ -674,8 +802,10 @@ namespace NHibernateMappingGenerator
             object sequenceName = null;
             if (sequencesComboBox.InvokeRequired)
             {
-                sequencesComboBox.Invoke(new MethodInvoker(delegate {
-                    sequenceName = sequencesComboBox.SelectedItem; }));
+                sequencesComboBox.Invoke(new MethodInvoker(delegate
+                {
+                    sequenceName = sequencesComboBox.SelectedItem;
+                }));
             }
             else
             {
@@ -686,12 +816,12 @@ namespace NHibernateMappingGenerator
                 sequence = sequenceName.ToString();
             }
 
-            var folderPath = AddSlashToFolderPath(folderTextBox.Text);
+            var folderPath = AddSlashToFolderPath(DomainFolderTextBox.Text);
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
-            var domainFolderPath = AddSlashToFolderPath(domainFolderTextBox.Text);
+            var domainFolderPath = AddSlashToFolderPath(IReposityFolderTextBox.Text);
             if (appSettings.GenerateInFolders)
             {
                 Directory.CreateDirectory(folderPath + "Contract");
@@ -714,9 +844,9 @@ namespace NHibernateMappingGenerator
                                                  FolderPath = folderPath,
                                                  DomainFolderPath = domainFolderPath,
                                                  TableName = tableName.Name,
-                                                 NameSpaceMap = namespaceMapTextBox.Text,
-                                                 NameSpace = nameSpaceTextBox.Text,
-                                                 AssemblyName = assemblyNameTextBox.Text,
+                                                 NameSpaceMap = IReposityNamespaceTextBox.Text,
+                                                 NameSpace = DomainNmespaceTextBox.Text,
+                                                 AssemblyName = ReposityNamespaceTextBox.Text,
                                                  Sequence = sequence,
                                                  Language = LanguageSelected,
                                                  FieldNamingConvention = GetFieldNamingConvention(),
@@ -776,7 +906,7 @@ namespace NHibernateMappingGenerator
             }
             return folderPath;
         }
-     
+
         private void cancelButton_Click(object sender, EventArgs e)
         {
             if (worker != null)
@@ -876,13 +1006,50 @@ namespace NHibernateMappingGenerator
             ApplicationPreferences applicationPreferences = GetApplicationPreferences(table, false, applicationSettings);
             var applicationController = new ApplicationController(applicationPreferences, table);
             applicationController.Generate(false);
-            mapCodeFastColoredTextBox.Text = applicationController.GeneratedMapCode;
+            //  mapCodeFastColoredTextBox.Text = applicationController.GeneratedMapCode;
             domainCodeFastColoredTextBox.Text = applicationController.GeneratedDomainCode;
         }
 
         private void includeForeignKeysCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             nameAsForeignTableCheckBox.Enabled = includeForeignKeysCheckBox.Checked;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var diagResult = folderBrowserDialog.ShowDialog();
+
+            if (diagResult == DialogResult.OK)
+            {
+                string folder =folderBrowserDialog.SelectedPath;
+                var conStr = "";
+                EnDecodeHelper ed = new EnDecodeHelper();
+                foreach (var c in applicationSettings.Connections)
+                {
+                    string cs = c.ConnectionString;
+                    if (checkBox4.Checked)
+                    {
+                        cs = ed.Encode(cs);
+                    }
+                    conStr += string.Format(@"
+  <ConnectionString>
+    <Name>{0}</Name>
+    <DbType>{1}</DbType>
+      <!--DbType当前支持 SqlServer,Oracle,MySql,Sqlite区分大小写 -->
+    <Encrypted>{2}</Encrypted>
+    <ConnectionString>{3}</ConnectionString>
+  </ConnectionString>
+", c.Name, c.Type, checkBox4.Checked, cs);
+                }
+
+                var content = string.Format(@"
+<?xml version=""1.0"" standalone=""yes""?>
+<DbConfiguration xmlns=""http://DbConfiguration.august.com/DbConfiguration.xsd"">
+{0}
+</DbConfiguration>
+    ", conStr);
+                WriteToFile(folder, "db.confg", content, true);
+            }
         }
 
     }

@@ -94,7 +94,10 @@
       <DependentUpon>ConnectionDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="DataConnectionConfiguration.cs" />
+    <Compile Include="EnDecodeHelper.cs" />
+    <Compile Include="Generater\CodeMaker.cs" />
     <Compile Include="IDataConnectionConfiguration.cs" />
+    <Compile Include="MySetting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="App.resx">

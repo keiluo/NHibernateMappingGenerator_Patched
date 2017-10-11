@@ -15,6 +15,7 @@ namespace NHibernateMappingGenerator
             Connections = new List<Connection>();
         }
 
+       public MySetting mySetting { get; set; }
         public List<Connection> Connections { get; set; }
         public Guid? LastUsedConnection { get; set; }
             
