@@ -687,17 +687,30 @@ namespace NHibernateMappingGenerator
             {
                 domainCodeFastColoredTextBox.Text = domainCs;
                 fastColoredTextBox1.Text = domainDesignerCs;
-                fastColoredTextBox2.Text = ireposityCs;
-                fastColoredTextBox3.Text = reposityCs;
-                fastColoredTextBox4.Text = reposityDesignerCs;
+                if (mySetting.IsAggregateRoot)
+                {
+                    fastColoredTextBox2.Text = ireposityCs;
+                    fastColoredTextBox3.Text = reposityCs;
+                    fastColoredTextBox4.Text = reposityDesignerCs;
+                }
+                else
+                {
+                    //不是聚合根不必要生成仓储类
+                    fastColoredTextBox2.Text = "";
+                    fastColoredTextBox3.Text = "";
+                    fastColoredTextBox4.Text = "";
+                }
             }
             else
             {
                 WriteToFile(mySetting.DominFolderPath, tb.ClassName + ".cs", domainCs, mySetting.IsReWroteCsFile);
-                WriteToFile(mySetting.IReposityFolderPath, "I" + tb.ClassName + "Reposity.cs", ireposityCs, mySetting.IsReWroteCsFile);
-                WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.cs", reposityCs, mySetting.IsReWroteCsFile);
                 WriteToFile(mySetting.DominFolderPath, tb.ClassName + ".designer.cs", domainDesignerCs, true);
-                WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.designer.cs", reposityDesignerCs, true);
+                if (mySetting.IsAggregateRoot)
+                { //聚合根才要生成仓储类
+                    WriteToFile(mySetting.IReposityFolderPath, "I" + tb.ClassName + "Reposity.cs", ireposityCs, mySetting.IsReWroteCsFile);
+                    WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.cs", reposityCs, mySetting.IsReWroteCsFile);
+                    WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.designer.cs", reposityDesignerCs, true);
+                }
             }
         }
         void WriteToFile(string folder, string fileName, string content, bool isCover = true)
