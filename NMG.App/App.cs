@@ -1017,21 +1017,24 @@ namespace NHibernateMappingGenerator
 
         private void button2_Click(object sender, EventArgs e)
         {
+
             var diagResult = folderBrowserDialog.ShowDialog();
 
             if (diagResult == DialogResult.OK)
             {
-                string folder =folderBrowserDialog.SelectedPath;
-                var conStr = "";
-                EnDecodeHelper ed = new EnDecodeHelper();
-                foreach (var c in applicationSettings.Connections)
+                try
                 {
-                    string cs = c.ConnectionString;
-                    if (checkBox4.Checked)
+                    string folder = folderBrowserDialog.SelectedPath;
+                    var conStr = "";
+                    EnDecodeHelper ed = new EnDecodeHelper();
+                    foreach (var c in applicationSettings.Connections)
                     {
-                        cs = ed.Encode(cs);
-                    }
-                    conStr += string.Format(@"
+                        string cs = c.ConnectionString;
+                        if (checkBox4.Checked)
+                        {
+                            cs = ed.Encode(cs);
+                        }
+                        conStr += string.Format(@"
   <ConnectionString>
     <Name>{0}</Name>
     <DbType>{1}</DbType>
@@ -1040,15 +1043,21 @@ namespace NHibernateMappingGenerator
     <ConnectionString>{3}</ConnectionString>
   </ConnectionString>
 ", c.Name, c.Type, checkBox4.Checked, cs);
-                }
+                    }
 
-                var content = string.Format(@"
+                    var content = string.Format(@"
 <?xml version=""1.0"" standalone=""yes""?>
 <DbConfiguration xmlns=""http://DbConfiguration.august.com/DbConfiguration.xsd"">
 {0}
 </DbConfiguration>
     ", conStr);
-                WriteToFile(folder, "db.confg", content, true);
+                    WriteToFile(folder, "db.confg", content, true);
+                    toolStripStatusLabel.Text = @"Generated db.config files successfully.";
+                }
+                catch (Exception ex)
+                {
+                    toolStripStatusLabel.Text = @"Generated db.config files failed.:" + ex.Message;
+                }
             }
         }
 

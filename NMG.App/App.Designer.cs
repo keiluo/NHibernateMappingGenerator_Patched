@@ -1492,7 +1492,7 @@ namespace NHibernateMappingGenerator
             // 
             this.button2.Location = new System.Drawing.Point(487, 37);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(183, 23);
+            this.button2.Size = new System.Drawing.Size(183, 30);
             this.button2.TabIndex = 22;
             this.button2.Text = "生成配置文件到...";
             this.button2.UseVisualStyleBackColor = true;
