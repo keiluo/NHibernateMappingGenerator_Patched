@@ -7,28 +7,31 @@ using NMG.Core.Domain;
 
 namespace NMG.Core.Reader
 {
-	// http://www.sqlteam.com/forums/topic.asp?TOPIC_ID=72957
+    // http://www.sqlteam.com/forums/topic.asp?TOPIC_ID=72957
 
-	public class SqlServerMetadataReader : IMetadataReader
-	{
-		private readonly string connectionStr;
+    public class SqlServerMetadataReader : IMetadataReader
+    {
+        private readonly string connectionStr;
 
-		public SqlServerMetadataReader(string connectionStr)
-		{
-			this.connectionStr = connectionStr;
-		}
+        public SqlServerMetadataReader(string connectionStr)
+        {
+            this.connectionStr = connectionStr;
+        }
 
-		#region IMetadataReader Members
+        #region IMetadataReader Members
 
-		public IList<Column> GetTableDetails(Table table, string owner)
-		{
-			var columns = new List<Column>();
-			var conn = new SqlConnection(connectionStr);
-			conn.Open();
-			try {
-				using (conn) {
-					using (var tableDetailsCommand = conn.CreateCommand()) {
-						tableDetailsCommand.CommandText = string.Format(
+        public IList<Column> GetTableDetails(Table table, string owner)
+        {
+            var columns = new List<Column>();
+            var conn = new SqlConnection(connectionStr);
+            conn.Open();
+            try
+            {
+                using (conn)
+                {
+                    using (var tableDetailsCommand = conn.CreateCommand())
+                    {
+                        tableDetailsCommand.CommandText = string.Format(
                             @"SELECT distinct c.column_name, c.data_type, c.is_nullable, tc.constraint_type, convert(int,c.numeric_precision) numeric_precision, c.numeric_scale, c.character_maximum_length, c.table_name, c.ordinal_position, tc.constraint_name,
        columnproperty(object_id(c.table_schema + '.' + c.table_name), c.column_name,'IsIdentity') IsIdentity, 
        (SELECT CASE WHEN count(1) = 0 THEN 0 ELSE 1 END 
@@ -60,100 +63,125 @@ on c.TABLE_SCHEMA=t.schema_name and c.TABLE_NAME=t.table_name and c.COLUMN_NAME=
 						where c.table_name = '{0}'
 							  and c.table_schema ='{1}'
 						order by c.table_name, c.ordinal_position",
-							table.Name.Replace("'", "''"), owner);
+                            table.Name.Replace("'", "''"), owner);
 
-						using (var sqlDataReader = tableDetailsCommand.ExecuteReader(CommandBehavior.Default)) {
-							while (sqlDataReader.Read()) {
-								string columnName = sqlDataReader.GetString(0);
-								string dataType = sqlDataReader.GetString(1);
-								bool isNullable = sqlDataReader.GetString(2).Equals("YES", StringComparison.CurrentCultureIgnoreCase);
-							    var isIdentity = Convert.ToBoolean(sqlDataReader["IsIdentity"]);
-								var characterMaxLenth = sqlDataReader["character_maximum_length"] as int?;
-								var numericPrecision = sqlDataReader["numeric_precision"] as int?;
-								var numericScale = sqlDataReader["numeric_scale"] as int?;
-							    var constraintName = sqlDataReader["constraint_name"].ToString();
-							    var isUnique = Convert.ToBoolean(sqlDataReader["IsUnique"]);
-								bool isPrimaryKey = (!sqlDataReader.IsDBNull(3) && sqlDataReader.GetString(3).Equals(SqlServerConstraintType.PrimaryKey.ToString(), StringComparison.CurrentCultureIgnoreCase));
-								bool isForeignKey = (!sqlDataReader.IsDBNull(3) && sqlDataReader.GetString(3).Equals(SqlServerConstraintType.ForeignKey.ToString(), StringComparison.CurrentCultureIgnoreCase));
+                        using (var sqlDataReader = tableDetailsCommand.ExecuteReader(CommandBehavior.Default))
+                        {
+                            while (sqlDataReader.Read())
+                            {
+                                string columnName = sqlDataReader.GetString(0);
+                                string dataType = sqlDataReader.GetString(1);
+                                bool isNullable = sqlDataReader.GetString(2).Equals("YES", StringComparison.CurrentCultureIgnoreCase);
+                                var isIdentity = Convert.ToBoolean(sqlDataReader["IsIdentity"]);
+                                var characterMaxLenth = sqlDataReader["character_maximum_length"] as int?;
+                                var numericPrecision = sqlDataReader["numeric_precision"] as int?;
+                                var numericScale = sqlDataReader["numeric_scale"] as int?;
+                                var constraintName = sqlDataReader["constraint_name"].ToString();
+                                var isUnique = Convert.ToBoolean(sqlDataReader["IsUnique"]);
+                                bool isPrimaryKey = (!sqlDataReader.IsDBNull(3) && sqlDataReader.GetString(3).Equals(SqlServerConstraintType.PrimaryKey.ToString(), StringComparison.CurrentCultureIgnoreCase));
+                                bool isForeignKey = (!sqlDataReader.IsDBNull(3) && sqlDataReader.GetString(3).Equals(SqlServerConstraintType.ForeignKey.ToString(), StringComparison.CurrentCultureIgnoreCase));
                                 string description = sqlDataReader["column_description"].ToString();
-								var m = new DataTypeMapper();
+                                var m = new DataTypeMapper();
+                                var c = columns.FirstOrDefault(o => o.Name == columnName);
+                                if (c != null)
+                                {
+                                    if (isPrimaryKey)
+                                    {
+                                        c.IsPrimaryKey = isPrimaryKey;
+                                    }
+                                    if (isForeignKey)
+                                    {
+                                        c.IsForeignKey = isForeignKey;
+                                    }
+                                }
+                                else
+                                {
+                                    columns.Add(new Column
+                                                    {
+                                                        Name = columnName,
+                                                        DataType = dataType,
+                                                        IsNullable = isNullable,
+                                                        IsIdentity = isIdentity,
+                                                        IsPrimaryKey = isPrimaryKey,
+                                                        IsForeignKey = isForeignKey,
+                                                        IsUnique = isUnique,
+                                                        MappedDataType = m.MapFromDBType(ServerType.SqlServer, dataType, characterMaxLenth, numericPrecision, numericScale).ToString(),
+                                                        DataLength = characterMaxLenth,
+                                                        DataScale = numericScale,
+                                                        DataPrecision = numericPrecision,
+                                                        ConstraintName = constraintName,
+                                                        Description = description
+                                                    });
+                                }
 
-								columns.Add(new Column
-												{
-													Name = columnName,
-													DataType = dataType,
-													IsNullable = isNullable,
-                                                    IsIdentity = isIdentity,
-													IsPrimaryKey = isPrimaryKey,
-													IsForeignKey = isForeignKey,
-                                                    IsUnique = isUnique,
-													MappedDataType = m.MapFromDBType(ServerType.SqlServer, dataType, characterMaxLenth, numericPrecision, numericScale).ToString(),
-													DataLength = characterMaxLenth,
-                                                    DataScale = numericScale,
-                                                    DataPrecision = numericPrecision,
-													ConstraintName = constraintName,
-                                                    Description = description
-												});
-
-								table.Columns = columns;
-							}
-						    table.Owner = owner;
-							table.PrimaryKey = DeterminePrimaryKeys(table);
+                            }
+                            table.Columns = columns;
+                            table.Owner = owner;
+                            table.PrimaryKey = DeterminePrimaryKeys(table);
 
                             // Need to find the table name associated with the FK
-						    foreach (var c in table.Columns)
-						    {
-						        if (c.IsForeignKey)
-						        {
-						            string referencedTableName;
-						            string referencedColumnName;
-						            GetForeignKeyReferenceDetails(c.ConstraintName, out referencedTableName, out referencedColumnName);
+                            foreach (var c in table.Columns)
+                            {
+                                if (c.IsForeignKey)
+                                {
+                                    string referencedTableName;
+                                    string referencedColumnName;
+                                    GetForeignKeyReferenceDetails(c.ConstraintName, out referencedTableName, out referencedColumnName);
 
-						            c.ForeignKeyTableName = referencedTableName;
-						            c.ForeignKeyColumnName = referencedColumnName;
-						        }
-						    }
-							table.ForeignKeys = DetermineForeignKeyReferences(table);
-							table.HasManyRelationships = DetermineHasManyRelationships(table);
-						}
-					}
-				}
-			} finally {
-				conn.Close();
-			}
-			
-			return columns;
-		}
+                                    c.ForeignKeyTableName = referencedTableName;
+                                    c.ForeignKeyColumnName = referencedColumnName;
+                                }
+                            }
+                            table.ForeignKeys = DetermineForeignKeyReferences(table);
+                            table.HasManyRelationships = DetermineHasManyRelationships(table);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
 
-		public IList<string> GetOwners()
-		{
-			var owners = new List<string>();
-			var conn = new SqlConnection(connectionStr);
-			conn.Open();
-			try {
-				using (conn) {
-					var tableCommand = conn.CreateCommand();
+            return columns;
+        }
+
+        public IList<string> GetOwners()
+        {
+            var owners = new List<string>();
+            var conn = new SqlConnection(connectionStr);
+            conn.Open();
+            try
+            {
+                using (conn)
+                {
+                    var tableCommand = conn.CreateCommand();
                     tableCommand.CommandText = "SELECT SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA ORDER BY SCHEMA_NAME";
-					var sqlDataReader = tableCommand.ExecuteReader(CommandBehavior.CloseConnection);
-					while (sqlDataReader.Read()) {
-						var ownerName = sqlDataReader.GetString(0);
-						owners.Add(ownerName);
-					}
-				}
-			} finally {
-				conn.Close();
-			}
-			return owners;
-		}
+                    var sqlDataReader = tableCommand.ExecuteReader(CommandBehavior.CloseConnection);
+                    while (sqlDataReader.Read())
+                    {
+                        var ownerName = sqlDataReader.GetString(0);
+                        owners.Add(ownerName);
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return owners;
+        }
 
-		public List<Table> GetTables(string owner)
-		{
-			var tables = new List<Table>();
-			var conn = new SqlConnection(connectionStr);
-			conn.Open();
-			try {
-				using (conn) {
-					var tableCommand = conn.CreateCommand();
+        public List<Table> GetTables(string owner)
+        {
+            var tables = new List<Table>();
+            var conn = new SqlConnection(connectionStr);
+            conn.Open();
+            try
+            {
+                using (conn)
+                {
+                    var tableCommand = conn.CreateCommand();
                     tableCommand.CommandText = String.Format(@"select t.table_name,k.table_description from information_schema.tables t
 left join (SELECT top 1 s.name as schema_name, A.name AS table_name,C.value AS table_description 
 FROM sys.schemas s
@@ -161,56 +189,59 @@ inner join  sys.tables A  on s.schema_id=A.schema_id
 LEFT JOIN sys.extended_properties C ON C.major_id = A.object_id
 WHERE c.minor_id=0) k on t.TABLE_NAME=k.table_name and t.TABLE_SCHEMA=k.schema_name
 where table_type in ('BASE TABLE','VIEW') AND TABLE_SCHEMA = '{0}'", owner);
-					var sqlDataReader = tableCommand.ExecuteReader(CommandBehavior.CloseConnection);
-					while (sqlDataReader.Read()) {
-						var tableName = sqlDataReader.GetString(0);
-                         string description = sqlDataReader["table_description"].ToString();
+                    var sqlDataReader = tableCommand.ExecuteReader(CommandBehavior.CloseConnection);
+                    while (sqlDataReader.Read())
+                    {
+                        var tableName = sqlDataReader.GetString(0);
+                        string description = sqlDataReader["table_description"].ToString();
                         tables.Add(new Table { Name = tableName, Description = description });
-					}
-				}
-				tables.Sort((x, y) => String.CompareOrdinal(x.Name, y.Name));
-			} finally {
-				conn.Close();
-			}
-			return tables;
-		}
+                    }
+                }
+                tables.Sort((x, y) => String.CompareOrdinal(x.Name, y.Name));
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return tables;
+        }
 
         public List<string> GetSequences(string owner)
         {
             return new List<string>();
         }
 
-		#endregion
+        #endregion
 
-		public PrimaryKey DeterminePrimaryKeys(Table table)
-		{
-			var primaryKeys = table.Columns.Where(x => x.IsPrimaryKey.Equals(true)).ToList();
+        public PrimaryKey DeterminePrimaryKeys(Table table)
+        {
+            var primaryKeys = table.Columns.Where(x => x.IsPrimaryKey.Equals(true)).ToList();
 
-			if (primaryKeys.Count() == 1)
-			{
-				var c = primaryKeys.First();
-				var key = new PrimaryKey
-							  {
-								  Type = PrimaryKeyType.PrimaryKey,
-								  Columns = { c }
-							  };
-				return key;
-			}
+            if (primaryKeys.Count() == 1)
+            {
+                var c = primaryKeys.First();
+                var key = new PrimaryKey
+                              {
+                                  Type = PrimaryKeyType.PrimaryKey,
+                                  Columns = { c }
+                              };
+                return key;
+            }
 
             if (primaryKeys.Count() > 1)
-			{
+            {
                 // Composite key
-				var key = new PrimaryKey
-							  {
-								  Type = PrimaryKeyType.CompositeKey,
-                                  Columns =  primaryKeys
-							  };
+                var key = new PrimaryKey
+                              {
+                                  Type = PrimaryKeyType.CompositeKey,
+                                  Columns = primaryKeys
+                              };
 
-				return key;
-			}
+                return key;
+            }
 
             return null;
-		}
+        }
 
         public IList<ForeignKey> DetermineForeignKeyReferences(Table table)
         {
@@ -231,22 +262,23 @@ where table_type in ('BASE TABLE','VIEW') AND TABLE_SCHEMA = '{0}'", owner);
             return foreignKeys;
         }
 
-		private void GetForeignKeyReferenceDetails(string constraintName, out string referencedTableName, out string referencedColumnName)
-		{
-			referencedTableName = string.Empty;
-		    referencedColumnName = string.Empty;
-			
-			var conn = new SqlConnection(connectionStr);
-			conn.Open();
-			try {
-			    using (conn)
-			    {
-			        using (var tableDetailsCommand = conn.CreateCommand())
-			        {
+        private void GetForeignKeyReferenceDetails(string constraintName, out string referencedTableName, out string referencedColumnName)
+        {
+            referencedTableName = string.Empty;
+            referencedColumnName = string.Empty;
 
-			            SqlCommand tableCommand = conn.CreateCommand();
-			            tableDetailsCommand.CommandText = String.Format(
-			                @"
+            var conn = new SqlConnection(connectionStr);
+            conn.Open();
+            try
+            {
+                using (conn)
+                {
+                    using (var tableDetailsCommand = conn.CreateCommand())
+                    {
+
+                        SqlCommand tableCommand = conn.CreateCommand();
+                        tableDetailsCommand.CommandText = String.Format(
+                            @"
 SELECT  
      KCU1.CONSTRAINT_NAME AS FK_CONSTRAINT_NAME 
     ,KCU1.TABLE_NAME AS FK_TABLE_NAME 
@@ -277,38 +309,43 @@ LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU
 	ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND 
 	   TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
 WHERE KCU1.CONSTRAINT_NAME = '{0}'",
-			                constraintName);
+                            constraintName);
 
-			            using (var sqlDataReader = tableDetailsCommand.ExecuteReader(CommandBehavior.Default))
-			            {
-			                while (sqlDataReader.Read())
-			                {
-			                    referencedTableName = sqlDataReader["REFERENCED_TABLE_NAME"].ToString();
+                        using (var sqlDataReader = tableDetailsCommand.ExecuteReader(CommandBehavior.Default))
+                        {
+                            while (sqlDataReader.Read())
+                            {
+                                referencedTableName = sqlDataReader["REFERENCED_TABLE_NAME"].ToString();
                                 var referencedPkColumnName = sqlDataReader["REFERENCED_TABLE_PK_COL"].ToString();
-			                    var refColumnName = sqlDataReader["REFERENCED_COLUMN_NAME"].ToString();
+                                var refColumnName = sqlDataReader["REFERENCED_COLUMN_NAME"].ToString();
                                 referencedColumnName = refColumnName == referencedPkColumnName ? string.Empty : refColumnName;
-			                }
-			            }
-			        }
-			    }
-			} finally {
-				conn.Close();
-			}
-		}
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
 
-		// http://blog.sqlauthority.com/2006/11/01/sql-server-query-to-display-foreign-key-relationships-and-name-of-the-constraint-for-each-table-in-database/
-		private IList<HasMany> DetermineHasManyRelationships(Table table)
-		{
-			var hasManyRelationships = new List<HasMany>();
-			var conn = new SqlConnection(connectionStr);
-			conn.Open();
-			try {
-				using (conn) {
-					using (var command = new SqlCommand()) {
-						command.Connection = conn;
-						command.CommandText =
-							String.Format(
-								@"
+        // http://blog.sqlauthority.com/2006/11/01/sql-server-query-to-display-foreign-key-relationships-and-name-of-the-constraint-for-each-table-in-database/
+        private IList<HasMany> DetermineHasManyRelationships(Table table)
+        {
+            var hasManyRelationships = new List<HasMany>();
+            var conn = new SqlConnection(connectionStr);
+            conn.Open();
+            try
+            {
+                using (conn)
+                {
+                    using (var command = new SqlCommand())
+                    {
+                        command.Connection = conn;
+                        command.CommandText =
+                            String.Format(
+                                @"
 						SELECT DISTINCT 
 							PK_TABLE = b.TABLE_NAME,
 							FK_TABLE = c.TABLE_NAME,
@@ -320,34 +357,40 @@ WHERE KCU1.CONSTRAINT_NAME = '{0}'",
 						  JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE d on a.CONSTRAINT_NAME = d.CONSTRAINT_NAME
 						WHERE b.TABLE_NAME = '{0}'
 						ORDER BY 1,2",
-								table.Name.Replace("'","''"));
-						SqlDataReader reader = command.ExecuteReader();
+                                table.Name.Replace("'", "''"));
+                        SqlDataReader reader = command.ExecuteReader();
 
-						while (reader.Read()) {
-							var constraintName = reader["CONSTRAINT_NAME"].ToString();
-							var fkColumnName = reader["FK_COLUMN_NAME"].ToString();
+                        while (reader.Read())
+                        {
+                            var constraintName = reader["CONSTRAINT_NAME"].ToString();
+                            var fkColumnName = reader["FK_COLUMN_NAME"].ToString();
                             var pkTableName = reader["PK_TABLE"].ToString();
-							var existing = hasManyRelationships.FirstOrDefault(hm => hm.ConstraintName == constraintName);
-							if (existing == null) {
-								var newHasManyItem = new HasMany
-												{
-													ConstraintName = constraintName,
-													Reference = reader.GetString(1),
+                            var existing = hasManyRelationships.FirstOrDefault(hm => hm.ConstraintName == constraintName);
+                            if (existing == null)
+                            {
+                                var newHasManyItem = new HasMany
+                                                {
+                                                    ConstraintName = constraintName,
+                                                    Reference = reader.GetString(1),
                                                     PKTableName = pkTableName
-												};
-								newHasManyItem.AllReferenceColumns.Add(fkColumnName);
-								hasManyRelationships.Add(newHasManyItem);
+                                                };
+                                newHasManyItem.AllReferenceColumns.Add(fkColumnName);
+                                hasManyRelationships.Add(newHasManyItem);
 
-							} else {
-								existing.AllReferenceColumns.Add(fkColumnName);
-							}
-						}
-					}
-				}
-			} finally {
-				conn.Close();
-			}
-			return hasManyRelationships;
-		}
-	}
+                            }
+                            else
+                            {
+                                existing.AllReferenceColumns.Add(fkColumnName);
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return hasManyRelationships;
+        }
+    }
 }

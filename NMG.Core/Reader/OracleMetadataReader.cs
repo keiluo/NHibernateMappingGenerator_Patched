@@ -90,20 +90,35 @@ order by column_id";
                             int? dataPrecision = oracleDataReader.IsDBNull(5) ? (int?)null : Convert.ToInt32(oracleDataReader.GetOracleNumber(5).Value);
                             int? dataScale = oracleDataReader.IsDBNull(6) ? (int?)null : Convert.ToInt32(oracleDataReader.GetOracleNumber(6).Value);
                             string description = oracleDataReader["column_description"].ToString();
-                            columns.Add(new Column
-                            {
-                                Name = oracleDataReader.GetOracleString(0).Value,
-                                DataType = oracleDataReader.GetOracleString(1).Value,
-                                IsNullable = string.Equals(oracleDataReader.GetOracleString(2).Value, "Y", StringComparison.OrdinalIgnoreCase),
-                                IsPrimaryKey = ConstraintTypeResolver.IsPrimaryKey(constraintType),
-                                IsForeignKey = ConstraintTypeResolver.IsForeignKey(constraintType),
-                                IsUnique = ConstraintTypeResolver.IsUnique(constraintType),
-                                MappedDataType = m.MapFromDBType(ServerType.Oracle, oracleDataReader.GetOracleString(1).Value, dataLength, dataPrecision, dataScale).ToString(),
-                                DataLength = dataLength,
-                                DataPrecision = dataPrecision,
-                                DataScale = dataScale,
-                                Description = description
-                            });
+                            var c = columns.FirstOrDefault(o => o.Name == oracleDataReader.GetOracleString(0).Value);
+                              if (c != null)
+                              {
+                                  if (ConstraintTypeResolver.IsPrimaryKey(constraintType))
+                                  {
+                                      c.IsPrimaryKey = ConstraintTypeResolver.IsPrimaryKey(constraintType);
+                                  }
+                                  if (ConstraintTypeResolver.IsForeignKey(constraintType))
+                                  {
+                                      c.IsForeignKey = ConstraintTypeResolver.IsForeignKey(constraintType);
+                                  }
+                              }
+                              else
+                              {
+                                  columns.Add(new Column
+                                  {
+                                      Name = oracleDataReader.GetOracleString(0).Value,
+                                      DataType = oracleDataReader.GetOracleString(1).Value,
+                                      IsNullable = string.Equals(oracleDataReader.GetOracleString(2).Value, "Y", StringComparison.OrdinalIgnoreCase),
+                                      IsPrimaryKey = ConstraintTypeResolver.IsPrimaryKey(constraintType),
+                                      IsForeignKey = ConstraintTypeResolver.IsForeignKey(constraintType),
+                                      IsUnique = ConstraintTypeResolver.IsUnique(constraintType),
+                                      MappedDataType = m.MapFromDBType(ServerType.Oracle, oracleDataReader.GetOracleString(1).Value, dataLength, dataPrecision, dataScale).ToString(),
+                                      DataLength = dataLength,
+                                      DataPrecision = dataPrecision,
+                                      DataScale = dataScale,
+                                      Description = description
+                                  });
+                              }
                         }
                         table.Owner = owner;
                         table.Columns = columns;
