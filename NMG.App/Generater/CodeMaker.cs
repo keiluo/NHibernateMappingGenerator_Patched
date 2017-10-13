@@ -18,12 +18,12 @@ namespace {0}
     public partial class {1}
     {{
    }}
-}}", mySetting.DominNamespace, table.ClassName);
+}}", mySetting.DominNamespace+(mySetting.IsUseDir?"."+mySetting.DomainDir.Replace("\\","."):""), table.ClassName);
 
             return res;
         }
 
-        public static string MakeDomainDesignerCs(Table table,  MySetting mySetting)
+        public static string MakeDomainDesignerCs(Table table, MySetting mySetting)
         {
             //处理列信息
             string colStr = "";
@@ -64,7 +64,7 @@ namespace {0}
     {{
 {6}
     }}
-}}", mySetting.DominNamespace
+}}", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
       , table.ClassName
       , table.Description
       , mySetting.DbConnectionName
@@ -87,8 +87,8 @@ namespace {1}
     {{
     }}
 }}
-", mySetting.DominNamespace
- , mySetting.IReposityNamespace
+", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
+ , mySetting.IReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.IReposityDir.Replace("\\", ".") : "")
  , table.ClassName);
 
             return res;
@@ -107,8 +107,8 @@ namespace {1}
     {{
     }}
 }}
-", mySetting.DominNamespace
- , mySetting.ReposityNamespace
+", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
+ , mySetting.ReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.ReposityDir.Replace("\\", ".") : "")
  , table.ClassName);
 
             return res;
@@ -139,13 +139,44 @@ namespace {2}
         }}
     }}
 }}
-", mySetting.DominNamespace
- , mySetting.IReposityNamespace
- , mySetting.ReposityNamespace
+", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
+ , mySetting.IReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.IReposityDir.Replace("\\", ".") : "")
+ , mySetting.ReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.ReposityDir.Replace("\\", ".") : "")
  , table.ClassName
  , mySetting.DbConnectionName);
 
             return res;
+        }
+
+        public static string MakeDbConfig(List<Connection> Connections, bool isEncode = false)
+        {
+            var conStr = "";
+            EnDecodeHelper ed = new EnDecodeHelper();
+            foreach (var c in Connections)
+            {
+                string cs = c.ConnectionString;
+                if (isEncode)
+                {
+                    cs = ed.Encode(cs);
+                }
+                conStr += string.Format(@"
+  <ConnectionString>
+    <Name>{0}</Name>
+    <DbType>{1}</DbType>
+      <!--DbType当前支持 SqlServer,Oracle,MySql,Sqlite区分大小写 -->
+    <Encrypted>{2}</Encrypted>
+    <ConnectionString>{3}</ConnectionString>
+  </ConnectionString>
+", c.Name, c.Type, isEncode, cs);
+            }
+
+            var content = string.Format(@"
+<?xml version=""1.0"" standalone=""yes""?>
+<DbConfiguration xmlns=""http://DbConfiguration.august.com/DbConfiguration.xsd"">
+{0}
+</DbConfiguration>
+    ", conStr);
+            return content;
         }
     }
 }

@@ -11,6 +11,7 @@ using NMG.Core.TextFormatter;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace NHibernateMappingGenerator
 {
@@ -105,6 +106,8 @@ namespace NHibernateMappingGenerator
             connectionNameComboBox.DataSource = applicationSettings.Connections;
             connectionNameComboBox.DisplayMember = "Name";
             connectionNameComboBox.SelectedItem = _currentConnection;
+
+            fastColoredTextBox5.Text = CodeMaker.MakeDbConfig(applicationSettings.Connections, checkBox4.Checked);
         }
 
         private void ConnectionNameSelectedIndexChanged(object sender, EventArgs e)
@@ -147,6 +150,7 @@ namespace NHibernateMappingGenerator
 
         protected override void OnLoad(EventArgs e)
         {
+            fastColoredTextBox5.Language = FastColoredTextBoxNS.Language.HTML;
             LoadApplicationSettings();
         }
 
@@ -159,6 +163,11 @@ namespace NHibernateMappingGenerator
             DomainNmespaceTextBox.Text = mySetting.DominNamespace;
             IReposityNamespaceTextBox.Text = mySetting.IReposityNamespace;
             ReposityNamespaceTextBox.Text = mySetting.ReposityNamespace;
+
+            textBox1.Text = mySetting.DomainDir;
+            textBox2.Text = mySetting.IReposityDir;
+            textBox3.Text = mySetting.ReposityDir;
+            checkBox5.Checked = mySetting.IsUseDir;
         }
         private void LoadApplicationSettings()
         {
@@ -168,7 +177,7 @@ namespace NHibernateMappingGenerator
                 // Display all previous connections
                 connectionNameComboBox.DataSource = applicationSettings.Connections;
                 connectionNameComboBox.DisplayMember = "Name";
-
+                fastColoredTextBox5.Text = CodeMaker.MakeDbConfig(applicationSettings.Connections, checkBox4.Checked);
                 // Set the last used connection
                 var lastUsedConnection =
                     applicationSettings.Connections.FirstOrDefault(connection => connection.Id == applicationSettings.LastUsedConnection);
@@ -330,6 +339,8 @@ namespace NHibernateMappingGenerator
             {
                 fastColoredTextBox4.Language = FastColoredTextBoxNS.Language.VB;
             }
+
+
             //// Map Code Formatting
             //if (appSettings.Language == Language.CSharp & appSettings.IsByCode || appSettings.IsFluent || appSettings.IsNhFluent || appSettings.IsCastle || appSettings.IsEntityFramework)
             //{
@@ -607,24 +618,24 @@ namespace NHibernateMappingGenerator
 
         private void folderSelectButton_Click(object sender, EventArgs e)
         {
-            var diagResult = folderBrowserDialog.ShowDialog();
+            var diagResult = openFileDialog1.ShowDialog();
 
             if (diagResult == DialogResult.OK)
             {
-                DomainFolderTextBox.Text = folderBrowserDialog.SelectedPath;
+                DomainFolderTextBox.Text = openFileDialog1.FileName;
             }
         }
 
         private void domainFolderSelectButton_Click(object sender, EventArgs e)
         {
-            var diagResult = folderBrowserDialog.ShowDialog();
+            var diagResult = openFileDialog1.ShowDialog();
 
             if (diagResult == DialogResult.OK)
             {
                 if (((Button)sender).Name == domainFolderSelectButton.Name)
-                    IReposityFolderTextBox.Text = folderBrowserDialog.SelectedPath;
+                    IReposityFolderTextBox.Text = openFileDialog1.FileName;
                 else
-                    ReposityFolderTextBox.Text = folderBrowserDialog.SelectedPath;
+                    ReposityFolderTextBox.Text = openFileDialog1.FileName;
             }
         }
 
@@ -642,6 +653,11 @@ namespace NHibernateMappingGenerator
             mySetting.DominFolderPath = DomainFolderTextBox.Text;
             mySetting.DominNamespace = DomainNmespaceTextBox.Text;
             mySetting.DbConnectionName = connectionNameComboBox.Text;
+
+            mySetting.DomainDir = textBox1.Text.Trim();
+            mySetting.IReposityDir = textBox2.Text.Trim();
+            mySetting.ReposityDir = textBox3.Text.Trim();
+            mySetting.IsUseDir = checkBox5.Checked;
         }
         private void GenerateClicked(object sender, EventArgs e)
         {
@@ -703,15 +719,75 @@ namespace NHibernateMappingGenerator
             }
             else
             {
-                WriteToFile(mySetting.DominFolderPath, tb.ClassName + ".cs", domainCs, mySetting.IsReWroteCsFile);
-                WriteToFile(mySetting.DominFolderPath, tb.ClassName + ".designer.cs", domainDesignerCs, true);
+                //先修改项目文件
+                UpdateCsprojFile(mySetting.DominFolderPath, Path.Combine(mySetting.DomainDir, tb.ClassName + ".cs"), Path.Combine(mySetting.DomainDir, tb.ClassName + ".designer.cs"));
+                WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.DominFolderPath), mySetting.DomainDir), tb.ClassName + ".cs", domainCs, mySetting.IsReWroteCsFile);
+                WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.DominFolderPath), mySetting.DomainDir), tb.ClassName + ".designer.cs", domainDesignerCs, true);
                 if (mySetting.IsAggregateRoot)
-                { //聚合根才要生成仓储类
-                    WriteToFile(mySetting.IReposityFolderPath, "I" + tb.ClassName + "Reposity.cs", ireposityCs, mySetting.IsReWroteCsFile);
-                    WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.cs", reposityCs, mySetting.IsReWroteCsFile);
-                    WriteToFile(mySetting.ReposityFolderPath, tb.ClassName + "Reposity.designer.cs", reposityDesignerCs, true);
+                {
+                    //聚合根才要生成仓储类
+                    //修改项目文件
+                    UpdateCsprojFile(mySetting.IReposityFolderPath, Path.Combine(mySetting.IReposityDir, "I" + tb.ClassName + "Reposity.cs"), null);
+                    UpdateCsprojFile(mySetting.ReposityFolderPath, Path.Combine(mySetting.ReposityDir, tb.ClassName + "Reposity.cs"), Path.Combine(mySetting.ReposityDir, tb.ClassName + "Reposity.designer.cs"));
+
+                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.IReposityFolderPath), mySetting.IReposityDir), "I" + tb.ClassName + "Reposity.cs", ireposityCs, mySetting.IsReWroteCsFile);
+                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.ReposityFolderPath), mySetting.ReposityDir), tb.ClassName + "Reposity.cs", reposityCs, mySetting.IsReWroteCsFile);
+                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.ReposityFolderPath), mySetting.ReposityDir), tb.ClassName + "Reposity.designer.cs", reposityDesignerCs, true);
                 }
             }
+        }
+        void UpdateCsprojFile(string path, string csFile, string designerFile = null)
+        {
+            //读XML
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
+            //取节点ItemGroup
+            var itemGroupNodeLis = doc.GetElementsByTagName("ItemGroup");
+            if (itemGroupNodeLis.Count > 2)
+            {
+                XmlNode itemGroupNode = itemGroupNodeLis[1];
+                //添加cs
+                XmlNode compileNode = IsExistsCompileNode(itemGroupNode.ChildNodes, csFile);
+                if (compileNode == null)
+                {
+                    compileNode = doc.CreateNode(XmlNodeType.Element, "Compile", doc.DocumentElement.NamespaceURI);
+                    var attr = doc.CreateAttribute("Include");
+                    attr.Value = csFile;
+                    compileNode.Attributes.Append(attr);
+                    itemGroupNode.AppendChild(compileNode);
+                }
+                //desinger.cs
+                if (string.IsNullOrEmpty(designerFile))
+                {
+                    doc.Save(path);
+                    return;
+                }
+                XmlNode designerCompileNode = IsExistsCompileNode(itemGroupNode.ChildNodes, designerFile);
+                if (designerCompileNode == null)
+                {
+                    designerCompileNode = doc.CreateNode(XmlNodeType.Element, "Compile", doc.DocumentElement.NamespaceURI);
+                    var attr = doc.CreateAttribute("Include");
+                    attr.Value = designerFile;
+                    designerCompileNode.Attributes.Append(attr);
+                    itemGroupNode.AppendChild(designerCompileNode);
+
+                    var dependentUponNode = doc.CreateNode(XmlNodeType.Element, "DependentUpon", doc.DocumentElement.NamespaceURI);
+                    dependentUponNode.InnerText = Path.GetFileName(csFile);
+                    designerCompileNode.AppendChild(dependentUponNode);
+                }
+                doc.Save(path);
+            }
+        }
+        XmlNode IsExistsCompileNode(XmlNodeList nodes, string includeValue)
+        {
+            foreach (XmlNode compileNode in nodes)
+            {
+                if (compileNode.Attributes["Include"].Value == includeValue)
+                {
+                    return compileNode;
+                }
+            }
+            return null;
         }
         void WriteToFile(string folder, string fileName, string content, bool isCover = true)
         {
@@ -852,39 +928,39 @@ namespace NHibernateMappingGenerator
             }
 
             var applicationPreferences = new ApplicationPreferences
-                                             {
-                                                 ServerType = _currentConnection.Type,
-                                                 FolderPath = folderPath,
-                                                 DomainFolderPath = domainFolderPath,
-                                                 TableName = tableName.Name,
-                                                 NameSpaceMap = IReposityNamespaceTextBox.Text,
-                                                 NameSpace = DomainNmespaceTextBox.Text,
-                                                 AssemblyName = ReposityNamespaceTextBox.Text,
-                                                 Sequence = sequence,
-                                                 Language = LanguageSelected,
-                                                 FieldNamingConvention = GetFieldNamingConvention(),
-                                                 FieldGenerationConvention = GetFieldGenerationConvention(),
-                                                 Prefix = prefixTextBox.Text,
-                                                 IsFluent = IsFluent,
-                                                 IsEntityFramework = IsEntityFramework,
-                                                 IsCastle = IsCastle,
-                                                 GeneratePartialClasses = appSettings.GeneratePartialClasses,
-                                                 GenerateWcfDataContract = appSettings.GenerateWcfContracts,
-                                                 ConnectionString = _currentConnection.ConnectionString,
-                                                 ForeignEntityCollectionType = appSettings.ForeignEntityCollectionType,
-                                                 InheritenceAndInterfaces = appSettings.InheritenceAndInterfaces,
-                                                 GenerateInFolders = appSettings.GenerateInFolders,
-                                                 ClassNamePrefix = appSettings.ClassNamePrefix,
-                                                 EnableInflections = appSettings.EnableInflections,
-                                                 IsByCode = appSettings.IsByCode,
-                                                 UseLazy = appSettings.UseLazy,
-                                                 FieldPrefixRemovalList = appSettings.FieldPrefixRemovalList,
-                                                 IncludeForeignKeys = appSettings.IncludeForeignKeys,
-                                                 NameFkAsForeignTable = appSettings.NameFkAsForeignTable,
-                                                 IncludeHasMany = appSettings.IncludeHasMany,
-                                                 IncludeLengthAndScale = appSettings.IncludeLengthAndScale,
-                                                 ValidatorStyle = appSettings.ValidationStyle
-                                             };
+            {
+                ServerType = _currentConnection.Type,
+                FolderPath = folderPath,
+                DomainFolderPath = domainFolderPath,
+                TableName = tableName.Name,
+                NameSpaceMap = IReposityNamespaceTextBox.Text,
+                NameSpace = DomainNmespaceTextBox.Text,
+                AssemblyName = ReposityNamespaceTextBox.Text,
+                Sequence = sequence,
+                Language = LanguageSelected,
+                FieldNamingConvention = GetFieldNamingConvention(),
+                FieldGenerationConvention = GetFieldGenerationConvention(),
+                Prefix = prefixTextBox.Text,
+                IsFluent = IsFluent,
+                IsEntityFramework = IsEntityFramework,
+                IsCastle = IsCastle,
+                GeneratePartialClasses = appSettings.GeneratePartialClasses,
+                GenerateWcfDataContract = appSettings.GenerateWcfContracts,
+                ConnectionString = _currentConnection.ConnectionString,
+                ForeignEntityCollectionType = appSettings.ForeignEntityCollectionType,
+                InheritenceAndInterfaces = appSettings.InheritenceAndInterfaces,
+                GenerateInFolders = appSettings.GenerateInFolders,
+                ClassNamePrefix = appSettings.ClassNamePrefix,
+                EnableInflections = appSettings.EnableInflections,
+                IsByCode = appSettings.IsByCode,
+                UseLazy = appSettings.UseLazy,
+                FieldPrefixRemovalList = appSettings.FieldPrefixRemovalList,
+                IncludeForeignKeys = appSettings.IncludeForeignKeys,
+                NameFkAsForeignTable = appSettings.NameFkAsForeignTable,
+                IncludeHasMany = appSettings.IncludeHasMany,
+                IncludeLengthAndScale = appSettings.IncludeLengthAndScale,
+                ValidatorStyle = appSettings.ValidationStyle
+            };
 
             return applicationPreferences;
         }
@@ -1038,32 +1114,7 @@ namespace NHibernateMappingGenerator
                 try
                 {
                     string folder = folderBrowserDialog.SelectedPath;
-                    var conStr = "";
-                    EnDecodeHelper ed = new EnDecodeHelper();
-                    foreach (var c in applicationSettings.Connections)
-                    {
-                        string cs = c.ConnectionString;
-                        if (checkBox4.Checked)
-                        {
-                            cs = ed.Encode(cs);
-                        }
-                        conStr += string.Format(@"
-  <ConnectionString>
-    <Name>{0}</Name>
-    <DbType>{1}</DbType>
-      <!--DbType当前支持 SqlServer,Oracle,MySql,Sqlite区分大小写 -->
-    <Encrypted>{2}</Encrypted>
-    <ConnectionString>{3}</ConnectionString>
-  </ConnectionString>
-", c.Name, c.Type, checkBox4.Checked, cs);
-                    }
-
-                    var content = string.Format(@"
-<?xml version=""1.0"" standalone=""yes""?>
-<DbConfiguration xmlns=""http://DbConfiguration.august.com/DbConfiguration.xsd"">
-{0}
-</DbConfiguration>
-    ", conStr);
+                    var content = CodeMaker.MakeDbConfig(applicationSettings.Connections, checkBox4.Checked);
                     WriteToFile(folder, "db.confg", content, true);
                     toolStripStatusLabel.Text = @"Generated db.config files successfully.";
                 }
@@ -1074,5 +1125,11 @@ namespace NHibernateMappingGenerator
             }
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            CaptureApplicationSettings();
+            applicationSettings.Save();
+            toolStripStatusLabel.Text = @"save config successed";
+        }
     }
 }
