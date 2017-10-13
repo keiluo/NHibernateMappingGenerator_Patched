@@ -34,6 +34,7 @@ namespace {0}
 @"
        {0}
        {1}
+       [TableField]
        [Alias(""{2}"")]
         /// <summary>
         /// {3}
@@ -51,6 +52,7 @@ namespace {0}
             string res = string.Format(@"
 using ServiceStack.DataAnnotations;
 using ZLY.Com.Core;
+using ServiceStack.OrmLite.zly;
 namespace {0}
 {{
     /// <summary>
