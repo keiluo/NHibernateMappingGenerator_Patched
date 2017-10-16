@@ -1115,7 +1115,7 @@ namespace NHibernateMappingGenerator
                 {
                     string folder = folderBrowserDialog.SelectedPath;
                     var content = CodeMaker.MakeDbConfig(applicationSettings.Connections, checkBox4.Checked);
-                    WriteToFile(folder, "db.confg", content, true);
+                    WriteToFile(folder, "db.config", content, true);
                     toolStripStatusLabel.Text = @"Generated db.config files successfully.";
                 }
                 catch (Exception ex)
