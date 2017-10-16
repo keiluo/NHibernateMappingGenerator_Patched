@@ -12,13 +12,13 @@ namespace NHibernateMappingGenerator
         {
             string res = string.Format(@"
 using ServiceStack.DataAnnotations;
-
+using System.Collections.Generic;
 namespace {0}
 {{
     public partial class {1}
     {{
    }}
-}}", mySetting.DominNamespace+(mySetting.IsUseDir?"."+mySetting.DomainDir.Replace("\\","."):""), table.ClassName);
+}}", mySetting.DominNamespace+(mySetting.IsUseDir&&!string.IsNullOrEmpty(mySetting.DomainDir) ?"."+mySetting.DomainDir.Replace("\\","."):""), table.ClassName);
 
             return res;
         }
@@ -64,7 +64,7 @@ namespace {0}
     {{
 {6}
     }}
-}}", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
+}}", mySetting.DominNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.DomainDir) ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
       , table.ClassName
       , table.Description
       , mySetting.DbConnectionName
@@ -79,6 +79,7 @@ namespace {0}
         {
             string res = string.Format(@"
 using ZLY.Com.Core;
+using System.Collections.Generic;
 using {0};
 
 namespace {1}
@@ -87,8 +88,8 @@ namespace {1}
     {{
     }}
 }}
-", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
- , mySetting.IReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.IReposityDir.Replace("\\", ".") : "")
+", mySetting.DominNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.DomainDir) ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
+ , mySetting.IReposityNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.IReposityDir) ? "." + mySetting.IReposityDir.Replace("\\", ".") : "")
  , table.ClassName);
 
             return res;
@@ -107,8 +108,8 @@ namespace {1}
     {{
     }}
 }}
-", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
- , mySetting.ReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.ReposityDir.Replace("\\", ".") : "")
+", mySetting.DominNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.DomainDir) ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
+ , mySetting.ReposityNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.ReposityDir) ? "." + mySetting.ReposityDir.Replace("\\", ".") : "")
  , table.ClassName);
 
             return res;
@@ -139,9 +140,9 @@ namespace {2}
         }}
     }}
 }}
-", mySetting.DominNamespace + (mySetting.IsUseDir ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
- , mySetting.IReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.IReposityDir.Replace("\\", ".") : "")
- , mySetting.ReposityNamespace + (mySetting.IsUseDir ? "." + mySetting.ReposityDir.Replace("\\", ".") : "")
+", mySetting.DominNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.DomainDir) ? "." + mySetting.DomainDir.Replace("\\", ".") : "")
+ , mySetting.IReposityNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.IReposityDir) ? "." + mySetting.IReposityDir.Replace("\\", ".") : "")
+ , mySetting.ReposityNamespace + (mySetting.IsUseDir && !string.IsNullOrEmpty(mySetting.ReposityDir) ? "." + mySetting.ReposityDir.Replace("\\", ".") : "")
  , table.ClassName
  , mySetting.DbConnectionName);
 

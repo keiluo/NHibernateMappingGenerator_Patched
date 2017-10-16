@@ -50,6 +50,7 @@ namespace NHibernateMappingGenerator
             TableFilterTextBox.Enabled = false;
             Closing += App_Closing;
             worker = new BackgroundWorker { WorkerSupportsCancellation = true };
+            mainTabControl.TabPages.Remove(advanceSettingsTabPage);
         }
 
         private void OnTableDetailsCellDirty(object sender, EventArgs e)
@@ -727,12 +728,12 @@ namespace NHibernateMappingGenerator
                 {
                     //聚合根才要生成仓储类
                     //修改项目文件
-                    UpdateCsprojFile(mySetting.IReposityFolderPath, Path.Combine(mySetting.IReposityDir, "I" + tb.ClassName + "Reposity.cs"), null);
-                    UpdateCsprojFile(mySetting.ReposityFolderPath, Path.Combine(mySetting.ReposityDir, tb.ClassName + "Reposity.cs"), Path.Combine(mySetting.ReposityDir, tb.ClassName + "Reposity.designer.cs"));
+                    UpdateCsprojFile(mySetting.IReposityFolderPath, Path.Combine(mySetting.IReposityDir, "I" + tb.ClassName + "Repository.cs"), null);
+                    UpdateCsprojFile(mySetting.ReposityFolderPath, Path.Combine(mySetting.ReposityDir, tb.ClassName + "Repository.cs"), Path.Combine(mySetting.ReposityDir, tb.ClassName + "Repository.designer.cs"));
 
-                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.IReposityFolderPath), mySetting.IReposityDir), "I" + tb.ClassName + "Reposity.cs", ireposityCs, mySetting.IsReWroteCsFile);
-                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.ReposityFolderPath), mySetting.ReposityDir), tb.ClassName + "Reposity.cs", reposityCs, mySetting.IsReWroteCsFile);
-                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.ReposityFolderPath), mySetting.ReposityDir), tb.ClassName + "Reposity.designer.cs", reposityDesignerCs, true);
+                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.IReposityFolderPath), mySetting.IReposityDir), "I" + tb.ClassName + "Repository.cs", ireposityCs, mySetting.IsReWroteCsFile);
+                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.ReposityFolderPath), mySetting.ReposityDir), tb.ClassName + "Repository.cs", reposityCs, mySetting.IsReWroteCsFile);
+                    WriteToFile(Path.Combine(Path.GetDirectoryName(mySetting.ReposityFolderPath), mySetting.ReposityDir), tb.ClassName + "Repository.designer.cs", reposityDesignerCs, true);
                 }
             }
         }
@@ -1130,6 +1131,12 @@ namespace NHibernateMappingGenerator
             CaptureApplicationSettings();
             applicationSettings.Save();
             toolStripStatusLabel.Text = @"save config successed";
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            textBox2.Text = textBox1.Text;
+            textBox3.Text = textBox1.Text;
         }
     }
 }
