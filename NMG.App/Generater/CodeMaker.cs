@@ -51,7 +51,7 @@ namespace {0}
             //最终结果
             string res = string.Format(@"
 using ServiceStack.DataAnnotations;
-using ZLY.Com.Core;
+using Com.Core;
 using ServiceStack.OrmLite.zly;
 namespace {0}
 {{
@@ -78,7 +78,7 @@ namespace {0}
         public static string MakeIReposityCs(Table table, MySetting mySetting)
         {
             string res = string.Format(@"
-using ZLY.Com.Core;
+using Com.Core;
 using System.Collections.Generic;
 using {0};
 
@@ -118,7 +118,7 @@ namespace {1}
         public static string MakeReposityDesignerCs(Table table, MySetting mySetting)
         {
             string res = string.Format(@"
-using ZLY.Com.Core;
+using Com.Core;
 using {0};
 using {1};
 
